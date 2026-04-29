@@ -20,4 +20,4 @@ spec:
   - https://github.com/Tomelin/k8s-homelab
   - https://kubernetes-sigs.github.io/metrics-server
   - https://metallb.github.io/metallb
-  - https://github.com/envoyproxy/gateway/charts
+  - oci://docker.io/envoyproxy
