@@ -9,7 +9,7 @@ spec:
   project: provisioning
   sources:
     - repoURL: oci://docker.io/envoyproxy
-      targetRevision: v1.5.9
+      targetRevision: 1.5.9
       chart: gateway-crds-helm
   destination:
     server: https://kubernetes.default.svc
