@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: metallb
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: provisioning
   sources:
@@ -15,19 +17,24 @@ spec:
             enabled: true
     - repoURL: https://github.com/Tomelin/k8s-homelab
       targetRevision: main
-      path: deploy/applications/metallb/manifests
+      path: deploy/applications/metallb/config
   destination:
-    server: https://kubernetes.default.svc
     namespace: metallb-system
+    server: https://kubernetes.default.svc
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged
+        pod-security.kubernetes.io/audit: privileged
+        pod-security.kubernetes.io/warn: privileged
     syncOptions:
       - CreateNamespace=true
     retry:
       limit: 2
       backoff:
         duration: 5s
-        factor: 2
         maxDuration: 3m0s
+        factor: 2

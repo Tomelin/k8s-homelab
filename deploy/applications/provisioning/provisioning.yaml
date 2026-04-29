@@ -17,7 +17,6 @@ spec:
     automated:
       prune: false
       selfHeal: false
-      # removido: enabled: true (não existe esse campo)
     retry:
       limit: 2
       backoff:
