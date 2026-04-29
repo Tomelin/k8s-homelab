@@ -1,0 +1,33 @@
+gateway-crds-helm:
+  crds:
+    envoyGateway:
+      enabled: true
+    gatewayAPI:
+      channel: standard
+      enabled: true
+
+gateway-helm:
+  global:
+    imageRegistry: ""
+    imagePullSecrets: []
+
+  commonLabels:
+   type: addons
+
+  deployment:
+    replicas: 2
+
+  hpa:
+    enabled: true
+    maxReplicas: 5
+
+  config:
+    extensionApis: {}
+    envoyGateway:
+      gateway:
+        controllerName: gateway.envoyproxy.io/gatewayclass-controller
+      provider:
+        type: Kubernetes
+      logging:
+        level:
+          default: info

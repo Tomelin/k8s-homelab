@@ -8,9 +8,12 @@ metadata:
 spec:
   project: provisioning
   sources:
-    - repoURL: https://repo.helmforge.dev
-      targetRevision: 1.5.9
-      chart: gateway-crds-helm
+    - repoURL: https://github.com/Tomelin/k8s-homelab
+      targetRevision: main
+      path: deploy/applications/gateway-api
+      helm:
+        valueFiles:
+          - values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: envoy-gateway-system
