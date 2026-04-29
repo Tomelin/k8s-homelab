@@ -4,7 +4,7 @@ metadata:
   name: l2-advertisement
   namespace: metallb-system
   annotations:
-    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   ipAddressPool:
     - ip-address-pool
