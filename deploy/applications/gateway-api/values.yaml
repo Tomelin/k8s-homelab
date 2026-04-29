@@ -31,3 +31,10 @@ gateway-helm:
       logging:
         level:
           default: info
+
+envoyConfig:
+  envoyServiceType: LoadBalancer
+  envoyServiceName: envoy-service
+  gatewayClass: envoy-gateway-class
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+
