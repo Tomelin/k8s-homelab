@@ -34,7 +34,7 @@ gateway-helm:
 
 envoyConfig:
   envoyServiceType: LoadBalancer
-  envoyServiceName: envoy-service
+  envoyServiceName: envoy-gateway-service
   gatewayClass: envoy-gateway-class
   controllerName: gateway.envoyproxy.io/gatewayclass-controller
 
