@@ -26,11 +26,11 @@ spec:
         namespace: argocd
         server: https://kubernetes.default.svc
       source:
-        path: 'deploy/applications/{{.name}}'
+        path: 'deploy/applications/{{.name}}/app'
         repoURL: https://github.com/Tomelin/k8s-homelab.git
         targetRevision: main
         directory:
-          recurse: true
+          recurse: false
       syncPolicy:
         automated:
           prune: false
