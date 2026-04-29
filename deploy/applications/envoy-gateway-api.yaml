@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: envoy-gateway-api
+  namespace: argocd
+spec:
+  project: provisioning
+  sources:
+    - repoURL: oci://docker.io/envoyproxy
+      targetRevision: 1.7.2
+      chart: gateway-crds-helm
+      helm:
+        values: |
+          controller:
+            enabled: true
+    # - repoURL: https://github.com/Tomelin/k8s-homelab
+    #   targetRevision: main
+    #   path: deploy/applications/gateway-api
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: envoy-gateway-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 2
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
