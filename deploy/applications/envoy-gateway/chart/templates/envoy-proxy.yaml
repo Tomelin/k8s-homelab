@@ -1,0 +1,27 @@
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: {{ .Release.Name }}-envoy-proxy
+spec:
+  mergeGateways: true
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDeployment:
+        replicas: 2
+        container:
+          resources:
+            requests:
+              cpu: 150m
+              memory: 350Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+      envoyService:
+        type: {{ .Values.envoyConfig.envoyServiceType | quote }}
+        name: {{ .Values.envoyConfig.envoyServiceName | quote }}
+        annotations:
+          custom-annotation: "example"
+        labels:
+          custom-label: "example"
