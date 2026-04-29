@@ -17,7 +17,7 @@ spec:
             enabled: true
     - repoURL: https://github.com/Tomelin/k8s-homelab
       targetRevision: main
-      path: deploy/applications/metallb/config
+      path: deploy/infra/metallb
   destination:
     namespace: metallb-system
     server: https://kubernetes.default.svc
