@@ -21,3 +21,4 @@ spec:
   - https://kubernetes-sigs.github.io/metrics-server
   - https://metallb.github.io/metallb
   - https://repo.helmforge.dev
+  - https://argoproj.github.io/argo-helm

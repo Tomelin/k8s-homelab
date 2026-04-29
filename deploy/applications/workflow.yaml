@@ -22,6 +22,8 @@ spec:
             create: true
 
         server:
+          authModes:
+          - server  
           httproute:
             enabled: true
             parentRefs:
