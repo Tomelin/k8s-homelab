@@ -8,7 +8,7 @@ metadata:
 spec:
   project: provisioning
   sources:
-    - repoURL: https://github.com/envoyproxy/gateway
+    - repoURL: https://github.com/envoyproxy/gateway/charts
       targetRevision: v1.5.9
       chart: gateway-crds-helm
   destination:
