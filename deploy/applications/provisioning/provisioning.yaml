@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: provisioning-applications
+  name: provisioning-structure
   namespace: argocd
 spec:
   destination:
@@ -12,13 +12,12 @@ spec:
     repoURL: https://github.com/Tomelin/k8s-homelab
     targetRevision: main
     path: deploy/applications/provisioning/manifests
-  sources: []
   project: provisioning
   syncPolicy:
     automated:
       prune: false
       selfHeal: false
-      enabled: true
+      # removido: enabled: true (não existe esse campo)
     retry:
       limit: 2
       backoff:
