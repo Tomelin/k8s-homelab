@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/Tomelin/k8s-homelab
     targetRevision: main
-    path: deploy/applications/metallb
+    path: deploy/applications/provisioning/manifests
   sources: []
   project: provisioning
   syncPolicy:
