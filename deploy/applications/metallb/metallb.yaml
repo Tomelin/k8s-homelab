@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metallb
+  namespace: argocd
+spec:
+  project: provisioning
+  sources:
+    - repoURL: https://metallb.github.io/metallb
+      targetRevision: 0.15.3
+      chart: metallb
+      helm:
+        values: |
+          controller:
+            enabled: true
+    - repoURL: https://github.com/Tomelin/k8s-homelab
+      targetRevision: main
+      path: deploy/applications/metallb
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: metallb-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 2
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
