@@ -1,0 +1,28 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: provisioning-structure
+  namespace: argocd
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  source:
+    repoURL: https://github.com/Tomelin/k8s-homelab
+    targetRevision: main
+    path: deploy/infra/provisioning
+  project: provisioning
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+    retry:
+      limit: 2
+      backoff:
+        duration: 5s
+        maxDuration: 3m0s
+        factor: 2
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true

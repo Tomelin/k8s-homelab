@@ -15,7 +15,7 @@ gateway-helm:
    type: addons
 
   deployment:
-    replicas: 2
+    replicas: 1
 
   hpa:
     enabled: true

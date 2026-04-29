@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: provisioning
+  namespace: argocd
+spec:
+  description: provisioning cluster addons
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  destinations:
+    - namespace: '*'
+      server: https://kubernetes.default.svc
+  sourceRepos:
+    - https://github.com/Tomelin/k8s-homelab
+    - https://github.com/Tomelin/k8s-homelab.git
+    - https://kubernetes-sigs.github.io/metrics-server
+    - https://metallb.github.io/metallb
+    - https://argoproj.github.io/argo-helm
