@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: provisioning2-applications
+  name: provisioningold-applications
   namespace: argocd
 spec:
   destination:
