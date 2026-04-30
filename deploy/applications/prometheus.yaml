@@ -11,7 +11,7 @@ spec:
     path: deploy/infra/prometheus
     helm:
       valueFiles:
-        - values.yamlgit add 
+        - values.yaml
   destination:
     namespace: monitoring
     server: https://kubernetes.default.svc
