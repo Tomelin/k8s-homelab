@@ -13,8 +13,15 @@ spec:
       chart: external-dns
       helm:
         value: |
+          domainFilters: []
           provider:
             name: cloudflare
+          sources:
+            - gateway-httproute
+            - gateway-grpcroute
+            - gateway-tlsroute
+            - gateway-tcproute
+            - gateway-udproute
 
   destination:
     namespace: external-dns
