@@ -5,8 +5,9 @@ external-dns:
       secretKeyRef:
         name: cloudflare-api-key
         key: apiKey
-        
-  domainFilters: []
+
+  domainFilters: 
+    - mydomains
   provider:
     name: cloudflare
   sources:
