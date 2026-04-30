@@ -12,7 +12,4 @@ spec:
     name: letsencrypt-cloudflare
     kind: ClusterIssuer
   dnsNames:
-    - "*.synera.com.br"
-    - "synera.com.br"
-    - "*.lockari.com"
-    - "lockari.com"
+    {{- toYaml .Values.certificates.dnsNames | nindent 10 }}

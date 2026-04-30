@@ -1,3 +1,6 @@
-
+---
 acme:
-  email: seu-email@exemplo.com 
+  email: invalid@email.com
+
+certificates:
+  dnsNames: [] 
