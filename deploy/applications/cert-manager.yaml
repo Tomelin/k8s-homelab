@@ -12,6 +12,8 @@ spec:
       targetRevision: v1.20.2
       chart: cert-manager
       helm:
+        valueFiles:
+          - $values/deploy/infra/cert-manager/values.yaml
         values: |
           crds:
             enabled: true
@@ -22,7 +24,12 @@ spec:
             enableGatewayAPI: true
     - repoURL: https://github.com/Tomelin/k8s-homelab
       targetRevision: main
-      path: deploy/infra/cert-manager
+      ref: values
+
+    # 3. Manifestos do Git (ClusterIssuer, etc)
+    - repoURL: https://github.com/Tomelin/k8s-homelab
+      targetRevision: main
+      path: deploy/infra/cert-manager/manifests
   destination:
     namespace: cert-manager
     server: https://kubernetes.default.svc
