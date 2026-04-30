@@ -40,7 +40,7 @@ envoyConfig:
   serviceAnnotations:
     enabled: false
     annotations:
-      metallb.io/address-pool: address-pool
+      metallb.io/address-pool: 192.168.0.160/32
 
 externalIP:
   enabled: false
