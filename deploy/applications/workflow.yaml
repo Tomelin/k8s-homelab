@@ -22,7 +22,8 @@ spec:
             create: true
         server:
           authModes:
-          - server  
+          - server
+          secure: false 
           httproute:
             enabled: true
             parentRefs:
