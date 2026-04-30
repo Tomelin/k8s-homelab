@@ -28,9 +28,14 @@ spec:
             parentRefs:
               - name: envoy-gateway-envoy-gateway
                 namespace: envoy-gateway-system
-                sectionName: http
+                sectionName: https
             hostnames:
-              - workflows.example.com
+              - workflows.synera.com.br
+            rules:
+            - backendRefs:
+              - name: workflows
+                port: 80
+                weight: 1
   syncPolicy:
     automated:
       prune: true
