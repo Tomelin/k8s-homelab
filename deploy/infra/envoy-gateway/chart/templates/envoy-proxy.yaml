@@ -21,7 +21,9 @@ spec:
       envoyService:
         type: {{ .Values.envoyConfig.envoyServiceType | quote }}
         name: {{ .Values.envoyConfig.envoyServiceName | quote }}
+        {{- if .Values.envoyConfig.serviceAnnotations.enabled }}
         annotations:
-          custom-annotation: "example"
+          {{ toYaml .Values.envoyConfig.serviceAnnotations.annotations }}
+        {{- end }}
         labels:
           custom-label: "example"

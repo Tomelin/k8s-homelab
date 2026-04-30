@@ -37,6 +37,10 @@ envoyConfig:
   envoyServiceName: envoy-gateway-service
   gatewayClass: envoy-gateway-class
   controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  serviceAnnotations:
+    enabled: false
+    annotations:
+      metallb.io/address-pool: address-pool
 
 externalIP:
   enabled: false
