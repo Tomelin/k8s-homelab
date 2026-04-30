@@ -14,14 +14,14 @@ spec:
       helm:
         valueFiles:
           - $values/deploy/infra/cert-manager/values.yaml
-        values: |
-          crds:
-            enabled: true
-          global:
-            leaderElection:
-              namespace: cert-manager
-          config:
-            enableGatewayAPI: true
+        # values: |
+        #   crds:
+        #     enabled: true
+        #   global:
+        #     leaderElection:
+        #       namespace: cert-manager
+        #   config:
+        #     enableGatewayAPI: true
     - repoURL: https://github.com/Tomelin/k8s-homelab
       targetRevision: main
       ref: values
