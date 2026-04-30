@@ -12,4 +12,5 @@ acme:
   email: invalid@email.com
 
 certificates:
-  dnsNames: [] 
+  dnsNames:
+  - invalid.domain
