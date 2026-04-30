@@ -7,18 +7,16 @@ opentelemetry-collector:
     receivers:
       otlp:
         protocols:
-          grpc:
-          http:
+          grpc: {}
+          http: {}
     processors:
-      memory_limiter:
-      batch:
+      memory_limiter: {}
+      batch: {}
     exporters:
-      debug:
+      debug: {}
     service:
       pipelines:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, batch]
           exporters: [debug]
-        metrics: {}
-        logs: {}
