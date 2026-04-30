@@ -1,18 +1,25 @@
 
 prometheus:
+  # Desabilita o Pushgateway que também pode pedir disco
+  pushgateway:
+    enabled: false
+  
   alertmanager:
     enabled: true
+    persistence:
+      enabled: false
+    # Algumas versões usam 'persistentVolume' outras 'persistence'
     persistentVolume:
       enabled: false
-    # Configura o volume temporário para usar memória (RAM) em vez de disco
     emptyDir:
       medium: "Memory"
 
   server:
     enabled: true
+    persistence:
+      enabled: false
     persistentVolume:
       enabled: false
-    # Configura o volume temporário para usar memória (RAM) em vez de disco
     emptyDir:
       medium: "Memory"
     ingress:

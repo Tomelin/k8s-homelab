@@ -4,10 +4,19 @@ postgresql:
   auth:
     database: "homelab"
     username: "admin"
-    password: "changeme" # Recomenda-se usar Secrets em produção
+    password: "changeme"
   primary:
+    # No chart da Bitnami, para usar emptyDir em vez de PVC:
     persistence:
-      enabled: false # Desabilitado conforme discutido anteriormente sobre a falta de storage provisioner
+      enabled: false
+    # Isso garante que ele não tente criar o VolumeClaimTemplate
+    extraVolumes:
+      - name: data
+        emptyDir:
+          medium: "Memory"
+    extraVolumeMounts:
+      - name: data
+        mountPath: /bitnami/postgresql
     resources:
       limits:
         cpu: 500m
