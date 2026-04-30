@@ -20,9 +20,6 @@ spec:
     namespace: metallb-system
     server: https://kubernetes.default.svc
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
     managedNamespaceMetadata:
       labels:
         pod-security.kubernetes.io/enforce: privileged
