@@ -4,10 +4,17 @@ prometheus:
     enabled: true
     persistentVolume:
       enabled: false
+    # Configura o volume temporário para usar memória (RAM) em vez de disco
+    emptyDir:
+      medium: "Memory"
+
   server:
     enabled: true
     persistentVolume:
       enabled: false
+    # Configura o volume temporário para usar memória (RAM) em vez de disco
+    emptyDir:
+      medium: "Memory"
     ingress:
       enabled: false
 
