@@ -12,9 +12,23 @@ argo-workflows:
     secure: false 
     httproute:
       enabled: true
-      parentRefs:
-        - name: envoy-gateway-envoy-gateway
-          namespace: envoy-gateway-system
-          sectionName: http
       hostnames:
-        - workflows.synera.com.br
+      - workflows.synera.com.br
+      parentRefs:
+      - group: gateway.networking.k8s.io
+        kind: Gateway
+        name: envoy-gateway-envoy-gateway
+        namespace: envoy-gateway-system
+        sectionName: http
+      rules:
+      - backendRefs:
+        - group: ""
+          kind: Service
+          name: argo-workflow-argo-workflows-server
+          port: 2746
+          weight: 1
+        matches:
+        - path:
+            type: PathPrefix
+            value: /
+
