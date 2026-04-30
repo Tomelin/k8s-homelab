@@ -7,21 +7,21 @@ metadata:
     argocd.argoproj.io/sync-wave: "4"
 spec:
   project: provisioning
-  sources:
-    - repoURL: https://kubernetes-sigs.github.io/external-dns
-      targetRevision: 1.20.0
-      chart: external-dns
-      helm:
-        value: |
-          domainFilters: []
-          provider:
-            name: cloudflare
-          sources:
-            - gateway-httproute
-            - gateway-grpcroute
-            - gateway-tlsroute
-            - gateway-tcproute
-            - gateway-udproute
+  source:
+    repoURL: https://kubernetes-sigs.github.io/external-dns
+    targetRevision: 1.20.0
+    chart: external-dns
+    helm:
+      value: |
+        domainFilters: []
+        provider:
+          name: cloudflare
+        sources:
+          - gateway-httproute
+          - gateway-grpcroute
+          - gateway-tlsroute
+          - gateway-tcproute
+          - gateway-udproute
 
   destination:
     namespace: external-dns
