@@ -3,6 +3,10 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   name: {{ .Release.Name }}-envoy-gateway
+  annotations:
+    {{- if .Values.externalIP.enabled }}
+    external-dns.alpha.kubernetes.io/target: {{ .Values.externalIP.address | quote }}
+    {{- end }}
 spec:
   gatewayClassName: {{ .Values.envoyConfig.gatewayClass }}
   listeners:
