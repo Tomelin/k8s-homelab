@@ -38,3 +38,6 @@ envoyConfig:
   gatewayClass: envoy-gateway-class
   controllerName: gateway.envoyproxy.io/gatewayclass-controller
 
+externalIP:
+  enabled: false
+  address: YOUR-EXTERNAL-IP
