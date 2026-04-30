@@ -12,3 +12,14 @@ spec:
     allowedRoutes:
       namespaces:
         from: All
+  - name: https
+    protocol: HTTPS
+    port: 443
+    tls:
+      mode: Terminate
+      certificateRefs:
+        - name: secret-tls
+          namespace: default
+    allowedRoutes:
+      namespaces:
+        from: All
