@@ -2,6 +2,8 @@ apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: BackendTLSPolicy
 metadata:
   name: argo-workflows-tls
+  annotations:
+    argocd.argoproj.io/sync-wave: "3" 
 spec:
   targetRefs:
     - group: ""
