@@ -18,6 +18,8 @@ spec:
         global:
           leaderElection:
             namespace: cert-manager
+        config:
+          enableGatewayAPI: true
   destination:
     namespace: cert-manager
     server: https://kubernetes.default.svc
