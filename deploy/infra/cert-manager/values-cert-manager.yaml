@@ -5,3 +5,6 @@ global:
     namespace: cert-manager
 config:
   enableGatewayAPI: true
+
+certificates:
+  dnsNames: [] 
