@@ -19,7 +19,7 @@ spec:
       mode: Terminate
       certificateRefs:
         - name: secret-tls
-          namespace: cert-manager
+          namespace: envoy-gateway-system
     allowedRoutes:
       namespaces:
         from: All
