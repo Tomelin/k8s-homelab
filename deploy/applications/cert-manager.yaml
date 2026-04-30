@@ -7,24 +7,13 @@ metadata:
     argocd.argoproj.io/sync-wave: "3"
 spec:
   project: provisioning
-  sources:
-    - repoURL: https://charts.jetstack.io
-      targetRevision: v1.20.2
-      chart: cert-manager
-      helm:
-        valueFiles:
-          - $values/deploy/infra/cert-manager/values-cert-manager.yaml
-    - repoURL: https://github.com/Tomelin/k8s-homelab
-      targetRevision: main
-      ref: values
-
-    # 3. Manifestos do Git (ClusterIssuer, etc)
-    - repoURL: https://github.com/Tomelin/k8s-homelab
-      targetRevision: main
-      path: deploy/infra/cert-manager
-      helm:
-        valueFiles:
-          - $values/deploy/infra/cert-manager/values.yaml
+  source:
+    repoURL: https://github.com/Tomelin/k8s-homelab
+    targetRevision: main
+    path: deploy/infra/cert-manager
+    helm:
+      valueFiles:
+        - values.yaml
   destination:
     namespace: cert-manager
     server: https://kubernetes.default.svc

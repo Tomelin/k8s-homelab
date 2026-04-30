@@ -1,4 +1,13 @@
 ---
+cert-manager:
+  crds:
+    enabled: true
+  global:
+    leaderElection:
+      namespace: cert-manager
+  config:
+    enableGatewayAPI: true
+
 acme:
   email: invalid@email.com
 
