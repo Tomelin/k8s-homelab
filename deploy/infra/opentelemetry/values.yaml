@@ -1,15 +1,24 @@
 opentelemetry-collector:
+  image:
+    repository: otel/opentelemetry-collector
   mode: deployment
   replicaCount: 1
   config:
     receivers:
-      jaeger: null
-      prometheus: null
-      zipkin: null
+      otlp:
+        protocols:
+          grpc:
+          http:
+    processors:
+      memory_limiter:
+      batch:
+    exporters:
+      debug:
     service:
       pipelines:
         traces:
-          receivers:
-            - otlp
-        metrics: null
-        logs: null
+          receivers: [otlp]
+          processors: [memory_limiter, batch]
+          exporters: [debug]
+        metrics: {}
+        logs: {}
