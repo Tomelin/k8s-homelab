@@ -20,3 +20,4 @@ spec:
     - https://kubernetes-sigs.github.io/metrics-server
     - https://metallb.github.io/metallb
     - https://argoproj.github.io/argo-helm
+    - https://charts.jetstack.io
