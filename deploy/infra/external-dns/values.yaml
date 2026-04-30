@@ -6,8 +6,7 @@ external-dns:
         name: cloudflare-api-key
         key: apiKey
 
-  domainFilters: 
-    - mydomains
+  domainFilters: []
   provider:
     name: cloudflare
   sources:
