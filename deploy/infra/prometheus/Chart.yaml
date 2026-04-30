@@ -1,0 +1,14 @@
+apiVersion: v2
+name: prometheus
+description: A Helm chart for deploying the Prometheus monitoring components.
+keywords:
+  - prometheus
+  - monitoring
+  - metrics
+type: application
+version: "1.0.0"
+appVersion: "1.0.0"
+dependencies:
+  - name: prometheus
+    version: 29.4.0
+    repository: https://prometheus-community.github.io/helm-charts

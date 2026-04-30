@@ -1,0 +1,15 @@
+
+prometheus:
+  alertmanager:
+    enabled: true
+  server:
+    ingress:
+      enabled: false
+
+gatewayAPI:
+  enabled: true
+  name: envoy-gateway-envoy-gateway
+  namespace: envoy-gateway-system
+  sectionName: https
+  domains:
+  - prometheus.domain.com

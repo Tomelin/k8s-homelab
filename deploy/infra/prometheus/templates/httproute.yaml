@@ -1,0 +1,27 @@
+---
+{{- if .Values.gatewayAPI.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: prometheus-route
+spec:
+  hostnames:
+    {{- toYaml .Values.gatewayAPI.domains | nindent 10 }}
+  parentRefs:
+    - name: {{ .Values.gatewayAPI.name }}
+      group: gateway.networking.k8s.io
+      kind: Gateway
+      namespace: {{ .Values.gatewayAPI.namespace }}
+      sectionName: {{ .Values.gatewayAPI.sectionName }}
+  rules:
+    - backendRefs:
+      - group: ""
+        kind: Service
+        name: prometheus-k8s
+        port: 9090
+        weight: 1
+      matches:
+      - path:
+          type: PathPrefix
+          value: /
+{{- end }}
