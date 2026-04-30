@@ -1,0 +1,20 @@
+
+argo-workflows:
+  workflow:
+    serviceAccount:
+      create: true
+      name: "argo-workflow"
+    rbac:
+      create: true
+  server:
+    authModes:
+    - server
+    secure: false 
+    httproute:
+      enabled: true
+      parentRefs:
+        - name: envoy-gateway-envoy-gateway
+          namespace: envoy-gateway-system
+          sectionName: http
+      hostnames:
+        - workflows.synera.com.br

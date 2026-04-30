@@ -9,34 +9,12 @@ spec:
     server: https://kubernetes.default.svc
   project: provisioning
   source:
-    chart: argo-workflows
-    repoURL: https://argoproj.github.io/argo-helm
-    targetRevision: 1.0.13
+    repoURL: https://github.com/Tomelin/k8s-homelab
+    targetRevision: main
+    path: deploy/infra/workflows
     helm:
-      values: |
-        workflow:
-          serviceAccount:
-            create: true
-            name: "argo-workflow"
-          rbac:
-            create: true
-        server:
-          authModes:
-          - server
-          secure: false 
-          httproute:
-            enabled: true
-            parentRefs:
-              - name: envoy-gateway-envoy-gateway
-                namespace: envoy-gateway-system
-                sectionName: http
-            hostnames:
-              - workflows.synera.com.br
-            # rules:
-            # - backendRefs:
-            #   - name: workflows
-            #     port: 80
-            #     weight: 1
+      valueFiles:
+        - values.yaml
   syncPolicy:
     automated:
       prune: true
