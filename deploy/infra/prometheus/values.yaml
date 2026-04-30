@@ -7,7 +7,7 @@ prometheus:
       enabled: false
 
 gatewayAPI:
-  enabled: true
+  enabled: false
   name: envoy-gateway-envoy-gateway
   namespace: envoy-gateway-system
   sectionName: https
