@@ -4,11 +4,11 @@ kind: Gateway
 metadata:
   name: {{ .Release.Name }}-envoy-gateway
   labels:
-    last-change: disable-annotation
-  # annotations:
-  #   {{- if .Values.externalIP.enabled }}
-  #   external-dns.alpha.kubernetes.io/target: {{ .Values.externalIP.address | quote }}
-  #   {{- end }}
+    last-change: add-annotation
+  annotations:
+    {{- if .Values.externalIP.enabled }}
+    external-dns.alpha.kubernetes.io/target: {{ .Values.externalIP.address | quote }}
+    {{- end }}
 spec:
   gatewayClassName: {{ .Values.envoyConfig.gatewayClass }}
   listeners:
