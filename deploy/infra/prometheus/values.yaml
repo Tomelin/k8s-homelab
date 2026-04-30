@@ -2,7 +2,12 @@
 prometheus:
   alertmanager:
     enabled: true
+    persistentVolume:
+      enabled: false
   server:
+    enabled: true
+    persistentVolume:
+      enabled: false
     ingress:
       enabled: false
 
