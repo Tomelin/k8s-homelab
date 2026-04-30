@@ -13,7 +13,7 @@ spec:
       chart: cert-manager
       helm:
         valueFiles:
-          - $values/deploy/infra/cert-manager/values.yaml
+          - $values/deploy/infra/cert-manager/values-cert-manager.yaml
         # values: |
         #   crds:
         #     enabled: true
