@@ -13,6 +13,8 @@ spec:
       chart: external-dns
       helm:
         value: |
+          provider:
+            name: cloudflare
 
   destination:
     namespace: external-dns
