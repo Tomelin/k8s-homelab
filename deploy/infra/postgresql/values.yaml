@@ -1,0 +1,17 @@
+postgresql:
+  global:
+    storageClass: ""
+  auth:
+    database: "homelab"
+    username: "admin"
+    password: "changeme" # Recomenda-se usar Secrets em produção
+  primary:
+    persistence:
+      enabled: false # Desabilitado conforme discutido anteriormente sobre a falta de storage provisioner
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi

@@ -1,0 +1,24 @@
+opencost:
+  opencost:
+    exporter:
+      defaultClusterId: "homelab"
+    prometheus:
+      external:
+        enabled: true
+        # Aponta para o serviço do Prometheus criado pelo seu chart no namespace monitoring
+        url: http://prometheus-server.monitoring.svc.cluster.local
+    
+    # Se você quiser que o OpenCost envie métricas via OTLP para o seu coletor OTEL:
+    # otel:
+    #   receiver_url: http://opentelemetry-collector.monitoring.svc.cluster.local:4317
+
+  service:
+    type: ClusterIP
+    port: 9003
+
+  # Habilita a interface visual do OpenCost
+  ui:
+    enabled: true
+    service:
+      type: ClusterIP
+      port: 9090
