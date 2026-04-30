@@ -19,7 +19,7 @@ spec:
       mode: Terminate
       certificateRefs:
         - name: secret-tls
-          namespace: default
+          namespace: cert-manager
     allowedRoutes:
       namespaces:
         from: All
