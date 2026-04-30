@@ -8,27 +8,12 @@ metadata:
 spec:
   project: provisioning
   source:
-    repoURL: https://kubernetes-sigs.github.io/external-dns
-    targetRevision: 1.20.0
-    chart: external-dns
+    repoURL: https://github.com/Tomelin/k8s-homelab
+    targetRevision: main
+    path: deploy/infra/external-dns
     helm:
-      value: |
-        env:
-        - name: CF_API_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: cloudflare-api-key
-              key: apiKey
-        domainFilters: []
-        provider:
-          name: cloudflare
-        sources:
-          - gateway-httproute
-          - gateway-grpcroute
-          - gateway-tlsroute
-          - gateway-tcproute
-          - gateway-udproute
-
+      valueFiles:
+        - values.yaml
   destination:
     namespace: external-dns
     server: https://kubernetes.default.svc
