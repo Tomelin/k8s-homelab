@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: prometheus
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   project: provisioning
   source:
@@ -22,8 +24,8 @@ spec:
     syncOptions:
       - CreateNamespace=true
     retry:
-      limit: 2
+      limit: 5
       backoff:
         duration: 5s
-        maxDuration: 3m0s
+        maxDuration: 10m0s
         factor: 2

@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: metrics-server
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
     namespace: kube-system
@@ -24,7 +26,7 @@ spec:
       backoff:
         duration: 5s
         factor: 2
-        maxDuration: 3m0s
-      limit: 2
+        maxDuration: 10m0s
+      limit: 5
     syncOptions:
       - CreateNamespace=true

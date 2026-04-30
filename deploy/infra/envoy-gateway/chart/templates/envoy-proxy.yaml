@@ -23,7 +23,7 @@ spec:
         name: {{ .Values.envoyConfig.envoyServiceName | quote }}
         {{- if .Values.envoyConfig.serviceAnnotations.enabled }}
         annotations:
-          {{ toYaml .Values.envoyConfig.serviceAnnotations.annotations }}
+          {{- toYaml .Values.envoyConfig.serviceAnnotations.annotations | nindent 10 }}
         {{- end }}
         labels:
           custom-label: "example"

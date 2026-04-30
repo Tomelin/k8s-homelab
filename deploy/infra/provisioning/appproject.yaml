@@ -22,3 +22,4 @@ spec:
     - https://argoproj.github.io/argo-helm
     - https://charts.jetstack.io
     - https://kubernetes-sigs.github.io/external-dns
+    - https://postfinance.github.io/kubelet-csr-approver

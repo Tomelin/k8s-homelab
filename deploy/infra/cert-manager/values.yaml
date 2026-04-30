@@ -9,8 +9,8 @@ cert-manager:
     enableGatewayAPI: true
 
 acme:
-  email: invalid@email.com
+  email: invalid@labs.local
 
 certificates:
   dnsNames:
-  - invalid.domain
+  - labs.local

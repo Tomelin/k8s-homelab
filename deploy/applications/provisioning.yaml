@@ -4,6 +4,8 @@ kind: Application
 metadata:
   name: provisioning-structure
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
     namespace: argocd
@@ -18,10 +20,10 @@ spec:
       prune: true
       selfHeal: true
     retry:
-      limit: 2
+      limit: 5
       backoff:
         duration: 5s
-        maxDuration: 3m0s
+        maxDuration: 10m0s
         factor: 2
     syncOptions:
       - CreateNamespace=true
