@@ -10,11 +10,14 @@ metadata:
   namespace: argocd
 spec:
   ingressClassName: {{ .Values.argocd.ingressClassName }}
+  {{- if .Values.certManager.enabled }}
   tls:
   - hosts:
     {{- range .Values.argocd.hostnames }}
     - {{ . }}
     {{- end }}
+    secretName: {{ .Values.certManager.secretName }}
+  {{- end }}
   rules:
   {{- range .Values.argocd.hostnames }}
   - host: {{ . }}
