@@ -33,7 +33,7 @@ ingress-nginx:
 
 certManager:
   enabled: true
-  secretName: ingress-nginx-tls
+  secretName: secret-tls
   issuerRef:
     name: letsencrypt-cloudflare
     kind: ClusterIssuer
