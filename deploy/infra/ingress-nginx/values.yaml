@@ -40,3 +40,9 @@ certManager:
   dnsNames:
     - labs.local
     - "*.labs.local"
+
+argocd:
+  enabled: true
+  ingressClassName: nginx
+  hostnames:
+    - argocd.labs.local
