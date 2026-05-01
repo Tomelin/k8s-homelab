@@ -12,7 +12,7 @@ ingress-nginx:
       enabled: true
 
     extraArgs:
-      default-ssl-certificate: ingress-nginx/ingress-nginx-tls
+      default-ssl-certificate: ingress-nginx/secret-tls
 
     service:
       type: LoadBalancer
