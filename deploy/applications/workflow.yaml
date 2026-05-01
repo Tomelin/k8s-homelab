@@ -18,9 +18,9 @@ spec:
       valueFiles:
         - values.yaml
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+    # automated:
+    #   prune: true
+    #   selfHeal: true
     retry:
       backoff:
         duration: 5s
