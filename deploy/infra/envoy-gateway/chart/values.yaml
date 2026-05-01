@@ -49,4 +49,4 @@ externalIP:
 argocd:
   enabled: true
   hostnames:
-    - argocd.labs.local
+    - gitops.synera.com.br

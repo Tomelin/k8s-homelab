@@ -16,6 +16,11 @@ spec:
     kind: Gateway
     name: envoy-gateway-envoy-gateway
     namespace: envoy-gateway-system
+    sectionName: https
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: envoy-gateway-envoy-gateway
+    namespace: envoy-gateway-system
     sectionName: http
   rules:
   - backendRefs:

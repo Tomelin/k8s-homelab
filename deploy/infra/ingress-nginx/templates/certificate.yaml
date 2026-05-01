@@ -5,6 +5,10 @@ metadata:
   name: ingress-nginx-tls
   annotations:
     argocd.argoproj.io/sync-wave: "3"
+    reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+    reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: {{ .Values.certManager.reflectionNamespaces | quote }}
+    reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+    reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: {{ .Values.certManager.reflectionNamespaces | quote }}
 spec:
   secretName: {{ .Values.certManager.secretName }}
   issuerRef:
