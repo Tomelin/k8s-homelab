@@ -1,6 +1,8 @@
 ---
 ingress-nginx:
   controller:
+    admissionWebhooks:
+      enabled: false
     ingressClass: nginx
     ingressClassResource:
       name: nginx
