@@ -12,6 +12,7 @@ external-dns:
   provider:
     name: cloudflare
   sources:
+    - ingress
     - gateway-httproute
     - gateway-grpcroute
     - gateway-tlsroute

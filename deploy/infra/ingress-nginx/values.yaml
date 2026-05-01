@@ -1,0 +1,42 @@
+---
+ingress-nginx:
+  controller:
+    ingressClass: nginx
+    ingressClassResource:
+      name: nginx
+      enabled: true
+      default: true
+      controllerValue: k8s.io/ingress-nginx
+
+    publishService:
+      enabled: true
+
+    extraArgs:
+      default-ssl-certificate: ingress-nginx/ingress-nginx-tls
+
+    service:
+      type: LoadBalancer
+      externalTrafficPolicy: Local
+      annotations:
+        metallb.io/address-pool: ip-address-pool-external
+
+    metrics:
+      enabled: true
+      service:
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "10254"
+
+    config:
+      use-forwarded-headers: "true"
+      compute-full-forwarded-for: "true"
+
+certManager:
+  enabled: true
+  secretName: ingress-nginx-tls
+  issuerRef:
+    name: letsencrypt-cloudflare
+    kind: ClusterIssuer
+  dnsNames:
+    - labs.local
+    - "*.labs.local"
