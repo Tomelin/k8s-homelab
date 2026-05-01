@@ -16,6 +16,7 @@ spec:
     {{- range .Values.argocd.hostnames }}
     - {{ . }}
     {{- end }}
+    secretName: {{ .Values.certManager.secretName }}
   {{- end }}
   rules:
   {{- range .Values.argocd.hostnames }}
