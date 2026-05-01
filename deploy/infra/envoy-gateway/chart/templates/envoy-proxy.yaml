@@ -21,6 +21,7 @@ spec:
       envoyService:
         type: {{ .Values.envoyConfig.envoyServiceType | quote }}
         name: {{ .Values.envoyConfig.envoyServiceName | quote }}
+        externalTrafficPolicy: Cluster       
         {{- if .Values.envoyConfig.serviceAnnotations.enabled }}
         annotations:
           {{- toYaml .Values.envoyConfig.serviceAnnotations.annotations | nindent 10 }}
