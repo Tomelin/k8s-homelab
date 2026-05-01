@@ -16,7 +16,7 @@ spec:
     kind: Gateway
     name: envoy-gateway-envoy-gateway
     namespace: envoy-gateway-system
-    sectionName: https
+    sectionName: http
   rules:
   - backendRefs:
     - group: ""
