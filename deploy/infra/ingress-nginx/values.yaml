@@ -3,6 +3,8 @@ ingress-nginx:
   controller:
     admissionWebhooks:
       enabled: false
+    externalIPs:
+      - 192.168.0.160
     ingressClass: nginx
     ingressClassResource:
       name: nginx
