@@ -24,7 +24,7 @@ spec:
     tls:
       mode: Terminate
       certificateRefs:
-        - name: secret-tls
+        - name: envoy-gateway-tls
           namespace: envoy-gateway-system
     allowedRoutes:
       namespaces:

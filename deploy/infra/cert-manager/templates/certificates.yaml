@@ -5,9 +5,9 @@ metadata:
   name: envoy-gateway-tls
   namespace: envoy-gateway-system
   annotations:
-    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-wave: "5"
 spec:
-  secretName: secret-tls
+  secretName: envoy-gateway-tls
   issuerRef:
     name: letsencrypt-cloudflare
     kind: ClusterIssuer
