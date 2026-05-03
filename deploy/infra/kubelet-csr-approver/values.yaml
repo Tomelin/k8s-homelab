@@ -1,0 +1,35 @@
+kubelet-csr-approver:
+  # providerRegex: regex que deve bater com o hostname (nodeName) dos nós do cluster.
+  # Em Talos Linux os nós geralmente têm nomes como "talos-xxxx" ou o IP como nome.
+  # "^.*$" aprova qualquer nó — restrinja conforme seu naming convention.
+  providerRegex: "^.*$"
+
+  # bypassDnsResolution deve ser true em Talos Linux porque os nós não são
+  # resolvíveis via DNS durante o bootstrapping.
+  bypassDnsResolution: true
+
+  # providerIpPrefixes: lista de CIDRs válidos para os IPs dos nós do cluster.
+  # O kubelet-csr-approver valida que o IP no CSR pertence a um desses CIDRs.
+  # Ajuste para a subnet dos seus nós Talos.
+  providerIpPrefixes:
+    - "192.168.0.0/24"
+
+  # maxExpirationSeconds: tempo máximo de validade dos certificados emitidos.
+  # 367 dias (31622400s) é o padrão; reduza se quiser rotação mais frequente.
+  maxExpirationSeconds: 31622400
+
+  # Replicas do controller de aprovação.
+  replicas: 1
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+  # O kubelet-csr-approver precisa de RBAC para ler e aprovar CSRs.
+  # O chart cria o ClusterRole/ClusterRoleBinding automaticamente.
+  rbac:
+    create: true
