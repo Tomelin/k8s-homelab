@@ -11,6 +11,8 @@ gateway-helm:
     imageRegistry: ""
     imagePullSecrets: []
 
+  kubernetesClusterDomain: homelab
+
   commonLabels:
    type: addons
 
