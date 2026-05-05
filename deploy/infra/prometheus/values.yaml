@@ -1,34 +1,77 @@
 
-prometheus:
-  # Desabilita o Pushgateway que também pode pedir disco
-  pushgateway:
-    enabled: false
-  
+kube-stack:
+
+  # Kube Monitoring
+  # kube-prometheus-stack:
+  nameOverride: ""
   alertmanager:
+    enabled: false
+  grafana:
     enabled: true
-    persistence:
-      enabled: false
-    # Algumas versões usam 'persistentVolume' outras 'persistence'
-    persistentVolume:
-      enabled: false
-    emptyDir:
-      medium: "Memory"
-
-  server:
+    fullnameOverride: "grafana"
+    nodeSelector:
+      kubernetes.io/os: linux
+    adminPassword: admin
+  prometheusOperator:
+    fullnameOverride: "prometheus-operator"
     enabled: true
-    persistence:
-      enabled: false
-    persistentVolume:
-      enabled: false
-    emptyDir:
-      medium: "Memory"
-    ingress:
-      enabled: false
+    nodeSelector:
+      kubernetes.io/os: linux
+  kube-state-metrics:
+    fullnameOverride: "kube-state-metrics"
+    nodeSelector:
+      kubernetes.io/os: linux
+  kubelet:
+    serviceMonitor:
+      enabled: true
+      interval: "120s"
+  prometheus:
+    fullnameOverride: "prometheus"
+    serviceAccount:
+      create: true
+      name: "prometheus-k8s"
+    prometheusSpec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      retention: "30d"
+    prometheus-node-exporter:
+      fullnameOverride: "node-exporter"
+      prometheus:
+        monitor:
+          enabled: true
+          interval: "120s"
 
-gatewayAPI:
-  enabled: false
-  name: envoy-gateway-envoy-gateway
-  namespace: envoy-gateway-system
-  sectionName: https
-  domains:
-  - prometheus.domain.com
+
+
+  # Desabilita o Pushgateway que também pode pedir disco
+#   pushgateway:
+#     enabled: false
+  
+#   alertmanager:
+#     enabled: true
+#     persistence:
+#       enabled: false
+#     # Algumas versões usam 'persistentVolume' outras 'persistence'
+#     persistentVolume:
+#       enabled: false
+#     emptyDir:
+#       medium: "Memory"
+
+#   server:
+#     enabled: true
+#     persistence:
+#       enabled: false
+#     persistentVolume:
+#       enabled: false
+#     emptyDir:
+#       medium: "Memory"
+#     ingress:
+#       enabled: false
+
+# gatewayAPI:
+#   enabled: false
+#   name: envoy-gateway-envoy-gateway
+#   namespace: envoy-gateway-system
+#   sectionName: https
+#   domains:
+#   - prometheus.domain.com
