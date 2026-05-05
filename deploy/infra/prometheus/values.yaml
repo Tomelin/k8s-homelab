@@ -34,7 +34,7 @@ kube-stack:
       nodeSelector:
         kubernetes.io/os: linux
       retention: "30d"
-    prometheus-node-exporter:
+  prometheus-node-exporter:
       fullnameOverride: "node-exporter"
       prometheus:
         monitor:
