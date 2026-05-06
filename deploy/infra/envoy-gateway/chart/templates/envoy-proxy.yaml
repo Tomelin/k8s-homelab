@@ -10,7 +10,9 @@ metadata:
   labels:
     {{- toYaml $root.Values.labels | nindent 4 }}
   annotations:
+    {{- if $root.Values.annotations }}
     {{- toYaml $root.Values.annotations | nindent 4 }}
+    {{- end }}
     argocd.argoproj.io/sync-wave: "2"
 spec:
   logging:
