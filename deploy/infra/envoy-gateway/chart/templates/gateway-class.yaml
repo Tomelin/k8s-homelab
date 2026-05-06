@@ -9,8 +9,8 @@ metadata:
     {{- toYaml .Values.annotations | nindent 4 }}
 spec:
   controllerName: gateway.envoyproxy.io/gatewayclass-controller
-  parametersRef:
-    group: gateway.envoyproxy.io
-    kind: EnvoyProxy
-    name: {{ .Release.Name }}-envoy-proxy
-    namespace: {{ .Release.Namespace }}
+  # parametersRef:
+  #   group: gateway.envoyproxy.io
+  #   kind: EnvoyProxy
+  #   name: {{ .Release.Name }}-envoy-proxy
+  #   namespace: {{ .Release.Namespace }}
