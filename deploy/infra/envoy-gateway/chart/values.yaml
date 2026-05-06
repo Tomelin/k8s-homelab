@@ -17,7 +17,7 @@ argocd:
   hostnames:
   - gitops.synera.com.br
 
-namespace: envoy-gateway-system
+namespace: envoy-gateway
 # Namespace where the Envoy Gateway controller is installed
 managedNamespace: envoy-gateway-system
 
