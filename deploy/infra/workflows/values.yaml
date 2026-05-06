@@ -17,8 +17,8 @@ argo-workflows:
       parentRefs:
       - group: gateway.networking.k8s.io
         kind: Gateway
-        name: http
-        namespace: envoy-gateway-system
+        name: https
+        namespace: envoy-gateway
         sectionName: http
       rules:
       - backendRefs:
