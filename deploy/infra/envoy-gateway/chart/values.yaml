@@ -90,9 +90,6 @@ envoyProxy:
     limits:
       cpu: 1000m
       memory: 512Mi
-  image:
-    repository: "697525377503.dkr.ecr.us-east-1.amazonaws.com/fp-envoyproxy"
-    tag: "envoy-distroless-v1.37.0-multi-arch"
   service:
     type: LoadBalancer
     # # Common AWS LB Controller v2 annotations applied to every Gateway's NLB.

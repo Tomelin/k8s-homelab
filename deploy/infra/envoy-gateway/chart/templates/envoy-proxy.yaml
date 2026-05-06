@@ -51,7 +51,6 @@ spec:
       envoyDeployment:
         replicas: {{ $root.Values.envoyProxy.replicas }}
         container:
-          image: "{{ $root.Values.envoyProxy.image.repository }}:{{ $root.Values.envoyProxy.image.tag }}"
           resources:
             {{- toYaml $root.Values.envoyProxy.resources | nindent 12 }}
         pod:
