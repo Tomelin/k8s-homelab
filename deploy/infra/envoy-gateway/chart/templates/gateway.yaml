@@ -6,6 +6,8 @@ metadata:
   namespace: {{ .Values.namespace }}
   labels:
     {{- toYaml .Values.labels | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.gateways.mtlsPassthrough.annotations | nindent 4 }}
 spec:
   gatewayClassName: envoy
   infrastructure:
@@ -35,6 +37,8 @@ metadata:
   namespace: {{ .Values.namespace }}
   labels:
     {{- toYaml .Values.labels | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.gateways.plainHttp.annotations | nindent 4 }}
 spec:
   gatewayClassName: envoy
   infrastructure:
