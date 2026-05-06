@@ -1,0 +1,27 @@
+gatewayapi:
+  global:
+    imageRegistry: ""
+    imagePullSecrets: []
+
+  kubernetesClusterDomain: cluster.local
+
+  commonLabels:
+    type: addons
+
+  deployment:
+    replicas: 1
+
+  hpa:
+    enabled: true
+    maxReplicas: 5
+
+  config:
+    extensionApis: {}
+    envoyGateway:
+      gateway:
+        controllerName: gateway.envoyproxy.io/gatewayclass-controller
+      provider:
+        type: Kubernetes
+      logging:
+        level:
+          default: info
