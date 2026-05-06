@@ -1,0 +1,21 @@
+{{- $root := . -}}
+{{- if gt (int .Values.envoyProxy.replicas) 1 }}
+{{- range $key, $gateway := .Values.gateways }}
+{{- if $gateway.enabled }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: envoy-{{ $gateway.name }}
+  namespace: {{ $root.Values.namespace }}
+  labels:
+    {{- toYaml $root.Values.labels | nindent 4 }}
+spec:
+  minAvailable: {{ sub $root.Values.envoyProxy.replicas 1 }}
+  selector:
+    matchLabels:
+      gateway.envoyproxy.io/owning-gateway-name: {{ $gateway.name }}
+      gateway.envoyproxy.io/owning-gateway-namespace: {{ $root.Values.namespace }}
+{{- end }}
+{{- end }}
+{{- end }}

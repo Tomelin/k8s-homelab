@@ -1,11 +1,3 @@
-# gateway-crds-helm:
-#   crds:
-#     envoyGateway:
-#       enabled: true
-#     gatewayAPI:
-#       channel: standard
-#       enabled: true
-
 gateway-helm:
   global:
     imageRegistry: ""
@@ -52,3 +44,84 @@ argocd:
   enabled: true
   hostnames:
     - gitops.synera.com.br
+
+namespace: envoy-gateway
+# Namespace where the Envoy Gateway controller is installed
+managedNamespace: envoy-gateway-system
+
+# Wildcard hostname attached to each listener (SNI pattern for routing)
+listenerHostname: "*.synera.com.br"
+
+gateways:
+  # TLS-Passthrough Gateway for mTLS workloads. Envoy reads SNI from
+  # ClientHello and forwards encrypted bytes to the backend sidecar.
+  # No certificateRefs — cert is presented by the destination sidecar.
+  mtlsPassthrough:
+    enabled: false
+    name: mtls-passthrough
+    listenerName: mtls
+    port: 443
+    envoyProxyName: mtls-proxy
+    # Extra annotations merged on top of envoyProxy.service.annotations.
+    serviceAnnotations:
+      annotations:
+        metallb.io/address-pool: ip-address-pool-external
+  # HTTP plain Gateway. TLS is terminated upstream by the NLB with an
+  # ACM public wildcard cert (attached via aws-load-balancer-ssl-cert).
+  # Envoy receives plain HTTP and routes by HTTPRoute host rules.
+  plainHttps:
+    enabled: true
+    name: http
+    listenerName: http
+    port: 443
+    envoyProxyName: http-proxy
+    # Overridden per-env (see values/envoy-gateway-config/base.yaml.gotmpl).
+    # The ssl-cert annotation carries the ACM ARN for TLS termination at the NLB.
+    serviceAnnotations:
+    annotations:
+      metallb.io/address-pool: ip-address-pool-external
+
+envoyProxy:
+  replicas: 2
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+  image:
+    repository: "697525377503.dkr.ecr.us-east-1.amazonaws.com/fp-envoyproxy"
+    tag: "envoy-distroless-v1.37.0-multi-arch"
+  service:
+    type: LoadBalancer
+    # # Common AWS LB Controller v2 annotations applied to every Gateway's NLB.
+    annotations:
+      metallb.io/address-pool: ip-address-pool-external
+
+telemetry:
+  metrics:
+    prometheus:
+      # Exposes /stats/prometheus on port 19001 (0.0.0.0).
+      # Enables PodMonitor scraping for the Prometheus/Mimir stack.
+      enabled: true
+      # Port name on the Envoy Gateway managed Service. Verify after first deploy with:
+      # kubectl get svc -n envoy-gateway -l gateway.envoyproxy.io/owning-gateway-name=<gateway> -o yaml
+      portName: "metrics"
+      dashboard:
+        enabled: false
+    openTelemetry:
+      # Requires OTLP receiver enabled on the Datadog agent (port 4317).
+      # Enable on clusters where Datadog is the metrics backend.
+      enabled: false
+      host: "datadog-agent.datadog.svc.cluster.local"
+      port: 4317
+
+# Regex used by PrometheusRule and Grafana dashboard to select the gateway pods'
+# scrape job labels. PodMonitor generates job names like
+# "<namespace>/<podmonitor-name>" — each gateway gets a PodMonitor named
+# "<gateway>-envoy-proxy", so this regex catches both.
+prometheusJobRegex: ".*-envoy-proxy.*"
+
+labels:
+  env: ""

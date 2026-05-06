@@ -1,30 +1,110 @@
+{{- $root := . -}}
+{{- range $key, $gateway := .Values.gateways }}
+{{- if $gateway.enabled }}
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyProxy
 metadata:
-  name: {{ .Release.Name }}-envoy-proxy
+  name: {{ $gateway.envoyProxyName }}
+  namespace: {{ $root.Values.namespace }}
+  labels:
+    {{- toYaml $root.Values.labels | nindent 4 }}
+  annotations:
+    {{- toYaml $root.Values.annotations | nindent 4 }}
 spec:
-  mergeGateways: true
+  telemetry:
+    accessLog:
+      settings:
+        - format:
+            type: JSON
+            json:
+              timestamp: "%START_TIME%"
+              direction: "gateway"
+              bytes_received: "%BYTES_RECEIVED%"
+              bytes_sent: "%BYTES_SENT%"
+              duration_ms: "%DURATION%"
+              response_flags: "%RESPONSE_FLAGS%"
+              upstream_host: "%UPSTREAM_HOST%"
+              upstream_cluster: "%UPSTREAM_CLUSTER%"
+              downstream_remote_address: "%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%"
+          sinks:
+            - type: File
+              file:
+                path: /dev/stdout
+    {{- if or $root.Values.telemetry.metrics.prometheus.enabled $root.Values.telemetry.metrics.openTelemetry.enabled }}
+    metrics:
+      {{- if $root.Values.telemetry.metrics.prometheus.enabled }}
+      prometheus:
+        disable: false
+      {{- end }}
+      {{- if $root.Values.telemetry.metrics.openTelemetry.enabled }}
+      sinks:
+        - type: OpenTelemetry
+          openTelemetry:
+            host: {{ $root.Values.telemetry.metrics.openTelemetry.host | quote }}
+            port: {{ $root.Values.telemetry.metrics.openTelemetry.port }}
+      {{- end }}
+    {{- end }}
   provider:
     type: Kubernetes
     kubernetes:
       envoyDeployment:
-        replicas: 1
+        replicas: {{ $root.Values.envoyProxy.replicas }}
         container:
+          image: "{{ $root.Values.envoyProxy.image.repository }}:{{ $root.Values.envoyProxy.image.tag }}"
           resources:
-            requests:
-              cpu: 150m
-              memory: 350Mi
-            limits:
-              cpu: 500m
-              memory: 1Gi
+            {{- toYaml $root.Values.envoyProxy.resources | nindent 12 }}
+        pod:
+          annotations:
+            ad.datadoghq.com/envoy.logs: '[{"source": "envoy", "service": "{{ $root.Values.telemetry.datadog.service }}"}]'
+          nodeSelector:
+            {{- range $k, $v := (index $root.Values "nodeSelector") }}
+            {{ $k }}: {{ $v | quote }}
+            {{- end }}
+          tolerations:
+            - key: "addons"
+              operator: "Exists"
+              effect: "NoSchedule"
       envoyService:
-        type: {{ .Values.envoyConfig.envoyServiceType | quote }}
-        name: {{ .Values.envoyConfig.envoyServiceName | quote }}
-        externalTrafficPolicy: Cluster       
-        {{- if .Values.envoyConfig.serviceAnnotations.enabled }}
-        annotations:
-          {{- toYaml .Values.envoyConfig.serviceAnnotations.annotations | nindent 10 }}
+        type: {{ $root.Values.envoyProxy.service.type }}
+        {{- if $root.Values.envoyProxy.service.name  }}
+        name: {{ $root.Values.envoyProxy.service.name | quote }}
         {{- end }}
+        annotations:
+          {{- $merged := mergeOverwrite (dict) $root.Values.envoyProxy.service.annotations $gateway.serviceAnnotations }}
+          {{- toYaml $merged | nindent 10 }}
         labels:
-          custom-label: "example"
+          {{- $merged := mergeOverwrite (dict) $root.Values.envoyProxy.service.labels $gateway.serviceLabels }}
+          {{- toYaml $merged | nindent 10 }}
+{{- end }}
+{{- end }}
+# ---
+# apiVersion: gateway.envoyproxy.io/v1alpha1
+# kind: EnvoyProxy
+# metadata:
+#   name: {{ .Release.Name }}-envoy-proxy
+# spec:
+#   mergeGateways: true
+#   provider:
+#     type: Kubernetes
+#     kubernetes:
+#       envoyDeployment:
+#         replicas: 1
+#         container:
+#           resources:
+#             requests:
+#               cpu: 150m
+#               memory: 350Mi
+#             limits:
+#               cpu: 500m
+#               memory: 1Gi
+#       envoyService:
+#         type: {{ .Values.envoyConfig.envoyServiceType | quote }}
+#         name: {{ .Values.envoyConfig.envoyServiceName | quote }}
+#         externalTrafficPolicy: Cluster       
+#         {{- if .Values.envoyConfig.serviceAnnotations.enabled }}
+#         annotations:
+#           {{- toYaml .Values.envoyConfig.serviceAnnotations.annotations | nindent 10 }}
+#         {{- end }}
+#         labels:
+#           custom-label: "example"

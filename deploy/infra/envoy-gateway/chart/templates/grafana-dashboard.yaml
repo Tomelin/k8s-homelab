@@ -1,0 +1,691 @@
+{{- /*
+  Para gerar o JSON do dashboard para importação manual no Grafana:
+
+  helm template envoy-gateway-config ./deploy/charts/envoy-gateway-config -n envoy-gateway \
+    --set labels.env=homolog \
+    --set "telemetry.metrics.prometheus.dashboard.enabled=true" \
+    | grep -A 5000 "envoy-gateway.json:" | tail -n +2 | sed '/^---/q' | head -n -1 | sed 's/^    //' \
+    > /tmp/envoy-gateway-dashboard.json
+*/ -}}
+{{- if and .Values.telemetry.metrics.prometheus.enabled .Values.telemetry.metrics.prometheus.dashboard.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: envoy-gateway-dashboard
+  namespace: {{ .Values.namespace }}
+  labels:
+    grafana_dashboard: "1"
+    {{- toYaml .Values.labels | nindent 4 }}
+    service: platform-auth
+    project: "envoy-gateway"
+    owner: "platform-staffs"
+  annotations:
+    grafana_folder: "Platform/platform Auth"
+data:
+  envoy-gateway.json: |
+    {
+      "annotations": { "list": [] },
+      "editable": true,
+      "graphTooltip": 1,
+      "links": [],
+      "panels": [
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+          "id": 100,
+          "title": "Saúde do Gateway",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "steps": [
+                  { "color": "red", "value": null },
+                  { "color": "green", "value": 1 }
+                ]
+              },
+              "mappings": [
+                { "options": { "0": { "text": "DOWN" }, "1": { "text": "UP" } }, "type": "value" }
+              ]
+            }
+          },
+          "gridPos": { "h": 4, "w": 6, "x": 0, "y": 1 },
+          "id": 1,
+          "title": "Pods UP",
+          "type": "stat",
+          "targets": [
+            { "expr": "count(up{job=~\"$gateway\"} == 1) or vector(0)", "legendFormat": "UP" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "red", "value": 1 }
+                ]
+              }
+            }
+          },
+          "gridPos": { "h": 4, "w": 6, "x": 6, "y": 1 },
+          "id": 2,
+          "title": "Pods DOWN",
+          "type": "stat",
+          "targets": [
+            { "expr": "count(up{job=~\"$gateway\"} == 0) or vector(0)", "legendFormat": "DOWN" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "steps": [
+                  { "color": "red", "value": null },
+                  { "color": "green", "value": 1 }
+                ]
+              },
+              "mappings": [
+                { "options": { "0": { "text": "NOT LIVE", "color": "red" }, "1": { "text": "LIVE", "color": "green" } }, "type": "value" }
+              ]
+            }
+          },
+          "gridPos": { "h": 4, "w": 6, "x": 12, "y": 1 },
+          "id": 3,
+          "title": "Server Live",
+          "type": "stat",
+          "targets": [
+            { "expr": "min(envoy_server_live{job=~\"$gateway\"}) or vector(0)", "legendFormat": "Live" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "red", "value": 1 }
+                ]
+              },
+              "noValue": "0"
+            }
+          },
+          "gridPos": { "h": 4, "w": 6, "x": 18, "y": 1 },
+          "id": 4,
+          "title": "Falhas de Conexão Upstream (5m)",
+          "type": "stat",
+          "targets": [
+            { "expr": "sum(increase(envoy_cluster_upstream_cx_connect_fail{job=~\"$gateway\"}[5m]))", "legendFormat": "Falhas" }
+          ]
+        },
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
+          "id": 200,
+          "title": "Conexões & Tráfego",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "ops"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+          "id": 10,
+          "title": "Conexões Downstream — taxa por pod",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (pod, job) (rate(envoy_listener_downstream_cx_total{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{pod}}" }} ({{ "{{job}}" }})" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "ops"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
+          "id": 11,
+          "title": "Falhas de Conexão Upstream — taxa por cluster",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (pod, envoy_cluster_name) (rate(envoy_cluster_upstream_cx_connect_fail{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{pod}}" }} / {{ "{{envoy_cluster_name}}" }}" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "short"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
+          "id": 12,
+          "title": "Conexões Upstream Ativas — por cluster",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (pod, envoy_cluster_name) (envoy_cluster_upstream_cx_active{job=~\"$gateway\"})", "legendFormat": "{{ "{{pod}}" }} / {{ "{{envoy_cluster_name}}" }}" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "ops"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
+          "id": 13,
+          "title": "Timeouts de Requisição Upstream",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (pod, envoy_cluster_name) (rate(envoy_cluster_upstream_rq_timeout{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{pod}}" }} / {{ "{{envoy_cluster_name}}" }}" }
+          ]
+        },
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 22 },
+          "id": 300,
+          "title": "Recursos",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "bytes"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 23 },
+          "id": 20,
+          "title": "Memória Envoy — alocada vs heap",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "envoy_server_memory_allocated{job=~\"$gateway\"}", "legendFormat": "{{ "{{pod}}" }} alocada" },
+            { "expr": "envoy_server_memory_heap_size{job=~\"$gateway\"}", "legendFormat": "{{ "{{pod}}" }} heap" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "bytes"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 23 },
+          "id": 21,
+          "title": "Memória Container — uso vs limit",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "container_memory_working_set_bytes{container=\"envoy\", namespace=\"{{ .Values.managedNamespace }}\"}", "legendFormat": "{{ "{{pod}}" }} uso" },
+            { "expr": "kube_pod_container_resource_limits{container=\"envoy\", namespace=\"{{ .Values.managedNamespace }}\", resource=\"memory\"}", "legendFormat": "{{ "{{pod}}" }} limit" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "short"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 31 },
+          "id": 22,
+          "title": "Restarts por hora",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "increase(kube_pod_container_status_restarts_total{container=\"envoy\", namespace=\"{{ .Values.managedNamespace }}\"}[1h])", "legendFormat": "{{ "{{pod}}" }}" }
+          ]
+        },
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 39 },
+          "id": 400,
+          "title": "HTTP — Downstream (plain-https gateway)",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "reqps"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 40 },
+          "id": 30,
+          "title": "Requisições HTTP — taxa total",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (pod) (rate(envoy_http_downstream_rq_completed{job=~\"$gateway\", envoy_http_conn_manager_prefix=~\"http-.*\"}[5m]))", "legendFormat": "{{ "{{pod}}" }}" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "reqps"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 40 },
+          "id": 31,
+          "title": "Requisições HTTP — taxa por classe de resposta",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (pod) (rate(envoy_http_downstream_rq_xx{job=~\"$gateway\", envoy_http_conn_manager_prefix=~\"http-.*\", envoy_response_code_class=\"2\"}[5m]))", "legendFormat": "{{ "{{pod}}" }} 2xx" },
+            { "expr": "sum by (pod) (rate(envoy_http_downstream_rq_xx{job=~\"$gateway\", envoy_http_conn_manager_prefix=~\"http-.*\", envoy_response_code_class=\"3\"}[5m]))", "legendFormat": "{{ "{{pod}}" }} 3xx" },
+            { "expr": "sum by (pod) (rate(envoy_http_downstream_rq_xx{job=~\"$gateway\", envoy_http_conn_manager_prefix=~\"http-.*\", envoy_response_code_class=\"4\"}[5m]))", "legendFormat": "{{ "{{pod}}" }} 4xx" },
+            { "expr": "sum by (pod) (rate(envoy_http_downstream_rq_xx{job=~\"$gateway\", envoy_http_conn_manager_prefix=~\"http-.*\", envoy_response_code_class=\"5\"}[5m]))", "legendFormat": "{{ "{{pod}}" }} 5xx" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "short"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 48 },
+          "id": 32,
+          "title": "Requisições HTTP Ativas",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (pod) (envoy_http_downstream_rq_active{job=~\"$gateway\", envoy_http_conn_manager_prefix=~\"http-.*\"})", "legendFormat": "{{ "{{pod}}" }}" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "ms"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 48 },
+          "id": 33,
+          "title": "Latência HTTP Downstream — p50 / p99",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "histogram_quantile(0.50, sum by (le, pod) (rate(envoy_http_downstream_rq_time_bucket{job=~\"$gateway\", envoy_http_conn_manager_prefix=~\"http-.*\"}[5m])))", "legendFormat": "{{ "{{pod}}" }} p50" },
+            { "expr": "histogram_quantile(0.99, sum by (le, pod) (rate(envoy_http_downstream_rq_time_bucket{job=~\"$gateway\", envoy_http_conn_manager_prefix=~\"http-.*\"}[5m])))", "legendFormat": "{{ "{{pod}}" }} p99" }
+          ]
+        },
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 56 },
+          "id": 500,
+          "title": "TLS & Listeners",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "ops"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 57 },
+          "id": 40,
+          "title": "Conexões Downstream Ativas — por gateway",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (job) (envoy_listener_downstream_cx_active{job=~\"$gateway\"})", "legendFormat": "{{ "{{job}}" }}" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "ms"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 57 },
+          "id": 41,
+          "title": "Duração das Conexões Downstream — p50 / p99",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "histogram_quantile(0.50, sum by (le, job) (rate(envoy_listener_downstream_cx_length_ms_bucket{job=~\"$gateway\"}[5m])))", "legendFormat": "{{ "{{job}}" }} p50" },
+            { "expr": "histogram_quantile(0.99, sum by (le, job) (rate(envoy_listener_downstream_cx_length_ms_bucket{job=~\"$gateway\"}[5m])))", "legendFormat": "{{ "{{job}}" }} p99" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "ops"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 65 },
+          "id": 42,
+          "title": "Conexões Downstream Destruídas — taxa por motivo",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (pod) (rate(envoy_listener_downstream_cx_destroy{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{pod}}" }} destroy total" },
+            { "expr": "sum by (pod) (rate(envoy_listener_downstream_cx_destroy_remote{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{pod}}" }} remote close" },
+            { "expr": "sum by (pod) (rate(envoy_listener_downstream_cx_destroy_local{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{pod}}" }} local close" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "ops"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 65 },
+          "id": 43,
+          "title": "Overflow & Rejeições de Conexão",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (pod) (rate(envoy_listener_downstream_cx_overflow{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{pod}}" }} overflow" },
+            { "expr": "sum by (pod) (rate(envoy_listener_downstream_pre_cx_timeout{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{pod}}" }} pre-cx timeout" }
+          ]
+        },
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 73 },
+          "id": 600,
+          "title": "Control Plane & Saúde do Cluster",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "steps": [
+                  { "color": "red", "value": null },
+                  { "color": "green", "value": 1 }
+                ]
+              },
+              "mappings": [
+                { "options": { "0": { "text": "DESCONECTADO", "color": "red" }, "1": { "text": "CONECTADO", "color": "green" } }, "type": "value" }
+              ]
+            }
+          },
+          "gridPos": { "h": 4, "w": 6, "x": 0, "y": 74 },
+          "id": 50,
+          "title": "Control Plane (xDS)",
+          "type": "stat",
+          "targets": [
+            { "expr": "min(envoy_control_plane_connected_state{job=~\"$gateway\"}) or vector(0)", "legendFormat": "xDS" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "steps": [
+                  { "color": "red", "value": null },
+                  { "color": "orange", "value": 14 },
+                  { "color": "green", "value": 30 }
+                ]
+              },
+              "unit": "d",
+              "noValue": "N/A"
+            }
+          },
+          "gridPos": { "h": 4, "w": 6, "x": 6, "y": 74 },
+          "id": 51,
+          "title": "Dias até expirar primeiro cert",
+          "type": "stat",
+          "targets": [
+            { "expr": "min(envoy_server_days_until_first_cert_expiring{job=~\"$gateway\"})", "legendFormat": "dias" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "short"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 74 },
+          "id": 52,
+          "title": "Endpoints por Cluster — healthy vs total",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (envoy_cluster_name) (envoy_cluster_membership_healthy{job=~\"$gateway\"})", "legendFormat": "{{ "{{envoy_cluster_name}}" }} healthy" },
+            { "expr": "sum by (envoy_cluster_name) (envoy_cluster_membership_total{job=~\"$gateway\"})", "legendFormat": "{{ "{{envoy_cluster_name}}" }} total" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "red", "value": 1 }
+                ]
+              },
+              "noValue": "0"
+            }
+          },
+          "gridPos": { "h": 4, "w": 6, "x": 0, "y": 78 },
+          "id": 53,
+          "title": "Sem Upstream Saudável (5m)",
+          "type": "stat",
+          "targets": [
+            { "expr": "sum(increase(envoy_cluster_upstream_cx_none_healthy{job=~\"$gateway\"}[5m]))", "legendFormat": "none healthy" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "reqps"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 82 },
+          "id": 54,
+          "title": "Upstream — Respostas por classe (backend real)",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (envoy_cluster_name, envoy_response_code_class) (rate(envoy_cluster_upstream_rq_xx{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{envoy_cluster_name}}" }} {{ "{{envoy_response_code_class}}" }}xx" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "ops"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 82 },
+          "id": 55,
+          "title": "Erros de Roteamento HTTP (no_route / no_cluster)",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (pod) (rate(envoy_http_no_route{job=~\"$gateway\", envoy_http_conn_manager_prefix=~\"http-.*\"}[5m]))", "legendFormat": "{{ "{{pod}}" }} no_route" },
+            { "expr": "sum by (pod) (rate(envoy_http_no_cluster{job=~\"$gateway\", envoy_http_conn_manager_prefix=~\"http-.*\"}[5m]))", "legendFormat": "{{ "{{pod}}" }} no_cluster" }
+          ]
+        },
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 90 },
+          "id": 700,
+          "title": "Circuit Breakers & Retries",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "short",
+              "thresholds": {
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "red", "value": 1 }
+                ]
+              }
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 91 },
+          "id": 60,
+          "title": "Circuit Breakers Abertos — por cluster",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (envoy_cluster_name) (envoy_cluster_circuit_breakers_cx_open{job=~\"$gateway\"})", "legendFormat": "{{ "{{envoy_cluster_name}}" }} cx" },
+            { "expr": "sum by (envoy_cluster_name) (envoy_cluster_circuit_breakers_rq_open{job=~\"$gateway\"})", "legendFormat": "{{ "{{envoy_cluster_name}}" }} rq" },
+            { "expr": "sum by (envoy_cluster_name) (envoy_cluster_circuit_breakers_rq_pending_open{job=~\"$gateway\"})", "legendFormat": "{{ "{{envoy_cluster_name}}" }} rq_pending" },
+            { "expr": "sum by (envoy_cluster_name) (envoy_cluster_circuit_breakers_rq_retry_open{job=~\"$gateway\"})", "legendFormat": "{{ "{{envoy_cluster_name}}" }} retry" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "ops"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 91 },
+          "id": 61,
+          "title": "Upstream Retries — taxa por cluster",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (envoy_cluster_name) (rate(envoy_cluster_upstream_rq_retry{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{envoy_cluster_name}}" }} retry" },
+            { "expr": "sum by (envoy_cluster_name) (rate(envoy_cluster_upstream_rq_retry_limit_exceeded{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{envoy_cluster_name}}" }} limit exceeded" },
+            { "expr": "sum by (envoy_cluster_name) (rate(envoy_cluster_upstream_rq_retry_overflow{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{envoy_cluster_name}}" }} overflow" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "short"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 99 },
+          "id": 62,
+          "title": "Upstream Pending — ativo vs overflow",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (envoy_cluster_name) (envoy_cluster_upstream_rq_pending_active{job=~\"$gateway\"})", "legendFormat": "{{ "{{envoy_cluster_name}}" }} active" },
+            { "expr": "sum by (envoy_cluster_name) (rate(envoy_cluster_upstream_rq_pending_overflow{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{envoy_cluster_name}}" }} overflow/s" },
+            { "expr": "sum by (envoy_cluster_name) (rate(envoy_cluster_upstream_rq_pending_failure_eject{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{envoy_cluster_name}}" }} ejected/s" }
+          ]
+        },
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 107 },
+          "id": 800,
+          "title": "mTLS — Upstream SSL",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "ops"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 108 },
+          "id": 70,
+          "title": "Upstream SSL — handshakes e reutilização de sessão",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (envoy_cluster_name) (rate(envoy_cluster_ssl_handshake{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{envoy_cluster_name}}" }} handshake" },
+            { "expr": "sum by (envoy_cluster_name) (rate(envoy_cluster_ssl_session_reused{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{envoy_cluster_name}}" }} session reused" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "lineWidth": 1, "fillOpacity": 10 },
+              "unit": "ops"
+            }
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 108 },
+          "id": 71,
+          "title": "Upstream SSL — falhas de verificação mTLS",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum by (envoy_cluster_name) (rate(envoy_cluster_ssl_connection_error{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{envoy_cluster_name}}" }} conn error" },
+            { "expr": "sum by (envoy_cluster_name) (rate(envoy_cluster_ssl_fail_verify_san{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{envoy_cluster_name}}" }} fail SAN" },
+            { "expr": "sum by (envoy_cluster_name) (rate(envoy_cluster_ssl_fail_verify_cert_hash{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{envoy_cluster_name}}" }} fail cert hash" },
+            { "expr": "sum by (envoy_cluster_name) (rate(envoy_cluster_ssl_fail_verify_no_cert{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{envoy_cluster_name}}" }} no cert" },
+            { "expr": "sum by (envoy_cluster_name) (rate(envoy_cluster_ssl_fail_verify_error{job=~\"$gateway\"}[5m]))", "legendFormat": "{{ "{{envoy_cluster_name}}" }} verify error" }
+          ]
+        }
+      ],
+      "schemaVersion": 39,
+      "tags": ["envoy", "envoy-gateway", "mtls", "platform-auth"],
+      "templating": {
+        "list": [
+          {
+            "current": {},
+            "hide": 0,
+            "includeAll": false,
+            "name": "datasource",
+            "options": [],
+            "query": "prometheus",
+            "regex": "Prometheus - Banking.*",
+            "refresh": 1,
+            "label": "Datasource",
+            "type": "datasource"
+          },
+          {
+            "current": {},
+            "datasource": { "type": "prometheus", "uid": "${datasource}" },
+            "definition": "label_values(up{job=~\"{{ .Values.prometheusJobRegex }}\"}, job)",
+            "hide": 0,
+            "includeAll": true,
+            "allValue": "{{ .Values.prometheusJobRegex }}",
+            "multi": false,
+            "name": "gateway",
+            "options": [],
+            "query": {
+              "query": "label_values(up{job=~\"{{ .Values.prometheusJobRegex }}\"}, job)",
+              "refId": "StandardVariableQuery"
+            },
+            "refresh": 2,
+            "regex": "",
+            "label": "Gateway",
+            "sort": 1,
+            "type": "query"
+          }
+        ]
+      },
+      "time": { "from": "now-1h", "to": "now" },
+      "title": "Envoy Gateway",
+      "uid": "envoy-gateway",
+      "version": 1
+    }
+{{- end }}

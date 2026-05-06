@@ -1,0 +1,84 @@
+{{- if .Values.gateways.mtlsPassthrough.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ .Values.gateways.mtlsPassthrough.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- toYaml .Values.labels | nindent 4 }}
+spec:
+  gatewayClassName: envoy
+  infrastructure:
+    parametersRef:
+      group: gateway.envoyproxy.io
+      kind: EnvoyProxy
+      name: {{ .Values.gateways.mtlsPassthrough.envoyProxyName }}
+  listeners:
+    - name: {{ .Values.gateways.mtlsPassthrough.listenerName }}
+      protocol: TLS
+      port: {{ .Values.gateways.mtlsPassthrough.port }}
+      hostname: {{ .Values.listenerHostname | quote }}
+      tls:
+        mode: Passthrough
+      allowedRoutes:
+        namespaces:
+          from: All
+{{- end }}
+{{- if and .Values.gateways.mtlsPassthrough.enabled .Values.gateways.plainHttp.enabled }}
+---
+{{- end }}
+{{- if .Values.gateways.plainHttp.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ .Values.gateways.plainHttp.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- toYaml .Values.labels | nindent 4 }}
+spec:
+  gatewayClassName: envoy
+  infrastructure:
+    parametersRef:
+      group: gateway.envoyproxy.io
+      kind: EnvoyProxy
+      name: {{ .Values.gateways.plainHttp.envoyProxyName }}
+  listeners:
+    - name: {{ .Values.gateways.plainHttp.listenerName }}
+      protocol: HTTP
+      port: {{ .Values.gateways.plainHttp.port }}
+      hostname: {{ .Values.listenerHostname | quote }}
+      allowedRoutes:
+        namespaces:
+          from: All
+{{- end }}
+# ---
+# apiVersion: gateway.networking.k8s.io/v1
+# kind: Gateway
+# metadata:
+#   name: {{ .Release.Name }}-envoy-gateway
+#   labels:
+#     last-change: add-annotation
+#   annotations:
+#     {{- if .Values.externalIP.enabled }}
+#     external-dns.alpha.kubernetes.io/target: {{ .Values.externalIP.address | quote }}
+#     {{- end }}
+# spec:
+#   gatewayClassName: {{ .Values.envoyConfig.gatewayClass }}
+#   listeners:
+#   - name: http
+#     protocol: HTTP
+#     port: 80
+#     allowedRoutes:
+#       namespaces:
+#         from: All
+#   - name: https
+#     protocol: HTTPS
+#     port: 443
+#     tls:
+#       mode: Terminate
+#       certificateRefs:
+#         - name: envoy-gateway-tls
+#           namespace: envoy-gateway-system
+#     allowedRoutes:
+#       namespaces:
+#         from: All
