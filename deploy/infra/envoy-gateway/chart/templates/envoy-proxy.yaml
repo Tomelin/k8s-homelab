@@ -73,6 +73,11 @@ spec:
         {{- if $root.Values.envoyProxy.service.name  }}
         name: {{ $root.Values.envoyProxy.service.name | quote }}
         {{- end }}
+        {{- if $root.Values.envoyProxy.service.externalTrafficPolicy }}
+        # Controls whether traffic is routed only to the local node (Local) or any node (Cluster).
+        # Cluster is required when accessing from outside the cluster via NAT/router.
+        externalTrafficPolicy: {{ $root.Values.envoyProxy.service.externalTrafficPolicy }}
+        {{- end }}
         annotations:
           {{- $merged := mergeOverwrite (dict) $root.Values.envoyProxy.service.annotations ($gateway.serviceAnnotations | default (dict)) }}
           {{- toYaml $merged | nindent 10 }}

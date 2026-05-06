@@ -81,6 +81,9 @@ envoyProxy:
       memory: 512Mi
   service:
     type: LoadBalancer
+    # externalTrafficPolicy: Cluster allows traffic from any node (including the host machine
+    # and external clients via NAT/router). Use Local only when source IP preservation is needed.
+    externalTrafficPolicy: Cluster
     # # Common AWS LB Controller v2 annotations applied to every Gateway's NLB.
     annotations:
       metallb.io/address-pool: ip-address-pool-external
