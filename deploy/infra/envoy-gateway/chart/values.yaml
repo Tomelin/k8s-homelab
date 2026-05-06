@@ -62,7 +62,7 @@ gateways:
     listenerName: mtls
     port: 443
     envoyProxyName: mtls-proxy
-    annotations:
+    annotations: {}
     # Extra annotations merged on top of envoyProxy.service.annotations.
     serviceAnnotations:
       annotations:
