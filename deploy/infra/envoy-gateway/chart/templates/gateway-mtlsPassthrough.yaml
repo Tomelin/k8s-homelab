@@ -1,0 +1,29 @@
+{{- if .Values.gateways.mtlsPassthrough.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ .Values.gateways.mtlsPassthrough.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- toYaml .Values.labels | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.gateways.mtlsPassthrough.annotations | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  gatewayClassName: envoy
+  infrastructure:
+    parametersRef:
+      group: gateway.envoyproxy.io
+      kind: EnvoyProxy
+      name: {{ .Values.gateways.mtlsPassthrough.envoyProxyName }}
+  listeners:
+    - name: {{ .Values.gateways.mtlsPassthrough.listenerName }}
+      protocol: TLS
+      port: {{ .Values.gateways.mtlsPassthrough.port }}
+      hostname: {{ .Values.listenerHostname | quote }}
+      tls:
+        mode: Passthrough
+      allowedRoutes:
+        namespaces:
+          from: All
+{{- end }}

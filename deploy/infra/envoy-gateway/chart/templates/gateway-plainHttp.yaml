@@ -1,0 +1,26 @@
+{{- if .Values.gateways.plainHttp.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ .Values.gateways.plainHttp.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- toYaml .Values.labels | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.gateways.plainHttp.annotations | nindent 4 }}
+spec:
+  gatewayClassName: envoy
+  infrastructure:
+    parametersRef:
+      group: gateway.envoyproxy.io
+      kind: EnvoyProxy
+      name: {{ .Values.gateways.plainHttp.envoyProxyName }}
+  listeners:
+    - name: {{ .Values.gateways.plainHttp.listenerName }}
+      protocol: HTTP
+      port: {{ .Values.gateways.plainHttp.port }}
+      hostname: {{ .Values.listenerHostname | quote }}
+      allowedRoutes:
+        namespaces:
+          from: All
+{{- end }}
