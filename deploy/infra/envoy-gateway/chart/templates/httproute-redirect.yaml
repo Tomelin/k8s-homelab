@@ -6,6 +6,8 @@ metadata:
   namespace: {{ .Values.namespace }}
   labels:
     {{- toYaml .Values.labels | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   parentRefs:
     - name: {{ .Values.gateways.plainHttp.name }}

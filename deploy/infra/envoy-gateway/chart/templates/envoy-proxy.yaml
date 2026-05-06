@@ -11,6 +11,7 @@ metadata:
     {{- toYaml $root.Values.labels | nindent 4 }}
   annotations:
     {{- toYaml $root.Values.annotations | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   logging:
     level:
