@@ -12,6 +12,8 @@ argo-workflows:
     secure: false 
     httproute:
       enabled: true
+      annotations:
+        external-dns.alpha.kubernetes.io/target: "186.216.247.16"
       hostnames:
       - workflows.synera.com.br
       parentRefs:
