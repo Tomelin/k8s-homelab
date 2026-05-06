@@ -12,6 +12,9 @@ metadata:
   annotations:
     {{- toYaml $root.Values.annotations | nindent 4 }}
 spec:
+  logging:
+    level:
+      default: debug
   telemetry:
     accessLog:
       settings:
