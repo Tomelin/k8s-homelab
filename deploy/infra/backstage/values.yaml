@@ -1,0 +1,15 @@
+olha esse cobackstage:
+  image:
+    registry: 'docker.io'
+    repository: 'backstage/backstage'
+    tag: '1.23.0'
+  ingress:
+    enabled: true
+    hosts:
+      - host: backstage.example.com
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+  metrics:
+    serviceMonitor:
+      enabled: true

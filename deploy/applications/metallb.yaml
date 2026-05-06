@@ -7,17 +7,13 @@ metadata:
     argocd.argoproj.io/sync-wave: "1"
 spec:
   project: provisioning
-  sources:
-    - repoURL: https://metallb.github.io/metallb
-      targetRevision: 0.15.3
-      chart: metallb
-      helm:
-        values: |
-          controller:
-            enabled: true
-    - repoURL: https://github.com/Tomelin/k8s-homelab
-      targetRevision: main
-      path: deploy/infra/metallb
+  source:
+    repoURL: https://github.com/Tomelin/k8s-homelab.git
+    targetRevision: main
+    path: deploy/infra/metallb
+    helm:
+      valueFiles:
+        - values.yaml
   destination:
     namespace: metallb-system
     server: https://kubernetes.default.svc
@@ -25,11 +21,6 @@ spec:
     automated:
       prune: true
       selfHeal: true
-    managedNamespaceMetadata:
-      labels:
-        pod-security.kubernetes.io/enforce: privileged
-        pod-security.kubernetes.io/audit: privileged
-        pod-security.kubernetes.io/warn: privileged
     syncOptions:
       - CreateNamespace=true
     retry:

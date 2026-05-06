@@ -1,0 +1,127 @@
+
+---
+version: v1alpha1 # Indicates the schema used to decode the contents.
+debug: false # Enable verbose logging to the console.
+persist: true
+machine:
+    type: controlplane # Defines the role of the machine within the cluster.
+    token: d8sbw5.9c9twnv22b3u9mxt # The `token` is used by a machine to join the PKI of the cluster.
+    ca:
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJQekNCOHFBREFnRUNBaEVBN0pzaGxQQnh2ZEZMV2hDellTS3ZOekFGQmdNclpYQXdFREVPTUF3R0ExVUUKQ2hNRmRHRnNiM013SGhjTk1qWXdOREk1TURBd09UUXhXaGNOTXpZd05ESTJNREF3T1RReFdqQVFNUTR3REFZRApWUVFLRXdWMFlXeHZjekFxTUFVR0F5dGxjQU1oQUs1WXQ1TjI4bmpPZ2VsNjdiUVUzUVlPNU5PaEdoQTFVQVY1CkJDM2toNjBvbzJFd1h6QU9CZ05WSFE4QkFmOEVCQU1DQW9Rd0hRWURWUjBsQkJZd0ZBWUlLd1lCQlFVSEF3RUcKQ0NzR0FRVUZCd01DTUE4R0ExVWRFd0VCL3dRRk1BTUJBZjh3SFFZRFZSME9CQllFRktGWElYZ3RzbTlsMjFwRAplbi9PaGJoQTdkTHlNQVVHQXl0bGNBTkJBRU1TVlBpWVFydjZ0RWQrNllzOTRnK2wrQUVRQVlvTTF2RjhPdHUrCjNKakRieHlLdFc0bzV2Nm9WRDhRWEREVG5DeXZmTmpQaHJYUDM1UkU3Um5BQlFzPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+        key: LS0tLS1CRUdJTiBFRDI1NTE5IFBSSVZBVEUgS0VZLS0tLS0KTUM0Q0FRQXdCUVlESzJWd0JDSUVJUE11SU9kUTZzTDNzUG1JS1gwTFJIMG1NSnYxOHV0RFZHUzJoSURXM3FULwotLS0tLUVORCBFRDI1NTE5IFBSSVZBVEUgS0VZLS0tLS0K
+    certSANs: []
+
+    # Used to provide additional options to the kubelet.
+    kubelet:
+      image: ghcr.io/siderolabs/kubelet:v1.35.2 # The `image` field is an optional reference to an alternative kubelet image.
+      defaultRuntimeSeccompProfileEnabled: true # Enable container runtime default Seccomp profile.
+      disableManifestsDirectory: true # The `disableManifestsDirectory` field configures the kubelet to get static pod manifests from the /etc/kubernetes/manifests directory.
+      extraArgs:
+          rotate-server-certificates: "true"
+      extraConfig:
+          serverTLSBootstrap: true
+    network:
+      nameservers:
+        - 8.8.8.8
+        - 8.8.4.4
+        - 1.1.1.1
+
+    install:
+        disk: /dev/sda # The disk used for installations.
+        image: ghcr.io/siderolabs/installer:v1.12.5 # Allows for supplying the image used to perform the installation.
+        wipe: false # Indicates if the installation disk should be wiped at installation time.
+        grubUseUKICmdline: true # Indicates if legacy GRUB bootloader should use kernel cmdline from the UKI instead of building it on the host.
+        
+    features:
+        diskQuotaSupport: true # Enable XFS project quota support for EPHEMERAL partition and user disks.
+        kubePrism:
+            enabled: true # Enable KubePrism support - will start local load balancing proxy.
+            port: 7445 # KubePrism port.
+        hostDNS:
+            enabled: true # Enable host DNS caching resolver.
+            forwardKubeDNSToHost: true # Use the host DNS resolver as upstream for Kubernetes CoreDNS pods.
+    nodeLabels:
+        node.kubernetes.io/exclude-from-external-load-balancers: ""
+    sysctls:
+        net.netfilter.nf_conntrack_max: "1048576"
+        net.netfilter.nf_conntrack_tcp_timeout_established: "86400"
+cluster:
+    id: DKi9cfssyaORzYUQGmTVgjb5Sl1FlU6QZ0e_PAEu0qo= # Globally unique identifier for this cluster (base64 encoded random 32 bytes).
+    secret: uHiUwyDcG2Zdo11JSEg5ytcYOkBYOSF7AOTXrFWL1ac= # Shared secret of cluster (base64 encoded random 32 bytes).
+    controlPlane:
+        endpoint: https://192.168.0.150:6443 # Endpoint is the canonical controlplane endpoint, which can be an IP address or a DNS hostname.
+    clusterName: homelabs # Configures the cluster's name.
+    network:
+        dnsDomain: cluster.local # The domain used by Kubernetes DNS.
+        podSubnets:
+            - 10.244.0.0/16
+        serviceSubnets:
+            - 10.96.0.0/12
+    token: nwmr3j.jt621lmdgpbv2occ # The [bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/) used to join the cluster.
+    secretboxEncryptionSecret: 6+Hs2yd0ttTh0ZKYrE07fo0K1BKyfFn+Kwknj6/iVs4= # A key used for the [encryption of secret data at rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/).
+    ca:
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpRENDQVMrZ0F3SUJBZ0lRZTdjS1pFTHlJcE5yWERSaHduVysxREFLQmdncWhrak9QUVFEQWpBVk1STXcKRVFZRFZRUUtFd3ByZFdKbGNtNWxkR1Z6TUI0WERUSTJNRFF5T1RBd01EazBNVm9YRFRNMk1EUXlOakF3TURrMApNVm93RlRFVE1CRUdBMVVFQ2hNS2EzVmlaWEp1WlhSbGN6QlpNQk1HQnlxR1NNNDlBZ0VHQ0NxR1NNNDlBd0VICkEwSUFCR1VnWXR5MXFaNnRBRVh1SUR1Q0ZQU2FWN0J0bTlPOXQxYzFKNEFpK3pWbElBTno1UzBkb096L1JpbTkKU3YxZy91UDJmMS9HK2tCbmxMWHVYY3dFSmNDallUQmZNQTRHQTFVZER3RUIvd1FFQXdJQ2hEQWRCZ05WSFNVRQpGakFVQmdnckJnRUZCUWNEQVFZSUt3WUJCUVVIQXdJd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFCkZnUVV6YTNqWFFKVzdtaE1aQVdZcURQZUFwVXcvMDh3Q2dZSUtvWkl6ajBFQXdJRFJ3QXdSQUlnYThjMkwvaloKV2ZsdWt5TEMrTHYraytiVStBeTQwYkM4eGtQTUd4UXNpWUlDSUFucE5rcEwxTGhVRnNvdG9hRWFlSzkyT2hyQQpCRisweWU5dXhoR3lQbzA2Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+        key: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSUY3bGhxMkNEOEQ1Umc3dVFlWUZORUNUWGd2czFSUjBWKzVMYTJNeFY0U3lvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFWlNCaTNMV3BucTBBUmU0Z080SVU5SnBYc0cyYjA3MjNWelVuZ0NMN05XVWdBM1BsTFIyZwo3UDlHS2IxSy9XRCs0L1ovWDhiNlFHZVV0ZTVkekFRbHdBPT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
+    aggregatorCA:
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJZRENDQVFhZ0F3SUJBZ0lSQU5FNmxCU2ZTdG1wWnRZY1R0b2ZxRWd3Q2dZSUtvWkl6ajBFQXdJd0FEQWUKRncweU5qQTBNamt3TURBNU5ERmFGdzB6TmpBME1qWXdNREE1TkRGYU1BQXdXVEFUQmdjcWhrak9QUUlCQmdncQpoa2pPUFFNQkJ3TkNBQVJtSVIxNTBubWcwelZvUjNsenhPbHBQdFQzd1pqb1VHbCs3V2MrOHArNnFVbTVJT1NTCm85dHlmNDZFOVo2UjZvLzlSQ2RQYUtvSXRhQjk1SkRWQkFiOW8yRXdYekFPQmdOVkhROEJBZjhFQkFNQ0FvUXcKSFFZRFZSMGxCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQndNQ01BOEdBMVVkRXdFQi93UUZNQU1CQWY4dwpIUVlEVlIwT0JCWUVGSE5pZ3cyTkRnQm1tNDBCRnhyNG5BdGk5NkM3TUFvR0NDcUdTTTQ5QkFNQ0EwZ0FNRVVDCklRRDNiM1BRa0F2cmk0aFRkdllFc3lreHdadkVBeVBjMDByWUQ0OEpJWUQ4b0FJZ1ZKNldwR0JwKzhFZjlQVUQKN0EzTXNzZW1EMzRUTXZxSUI3aU5hTktrY213PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+        key: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSUZONDZqaHE5c2lvOU1QTEhOMDhBUTNnYjBzQ3BYWnQwd3hNL0ZhZ0xXOUJvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFWmlFZGVkSjVvTk0xYUVkNWM4VHBhVDdVOThHWTZGQnBmdTFuUHZLZnVxbEp1U0Rra3FQYgpjbitPaFBXZWtlcVAvVVFuVDJpcUNMV2dmZVNRMVFRRy9RPT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
+    serviceAccount:
+        key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlKS0FJQkFBS0NBZ0VBMXlhM29JL3IrRk1hOHJ6dUIybVQ2RGJpWGhpNUVUZUY0RzA0cmJOYlh6NmVpQm5PCjN3ZzJDMjJvSXAyWUpxUjd4QkFibllEbXlPSTFpU1hMeW9FS2MrSnNzYXR0ZmJrWjlaaENBUVFnazlYVU9wS1QKMjNHcnhoNEF1dnZUWnl5bXoxTnpnNjJYaHdUWmNWTkZua2VLajVSbld0NWFNdFdZWkpMSUgyVmFJbnZVQVFrZQpCY3J1Lyt1aUtSUjN4UXVnQzZJMXhCVzBPTnZoZ0pvblg4M2Q2bjVNRkMyaGlBU2taVEV1RklOS293UTdJQnJlCm5TcWtKNU5jYmV0NGFqeDZ5TS92MjJicGh0UCtQS2E0MHBMRy9nZ2dleGFSY29nT0JTclh3cWc3azFPb0wxdXoKVWtjTjlrdWVNK0wzMFNXMVp3bjZFQzh6b0kycDF2bkFXNTIvZlNjd3pIWjVzMlJacHIvZjhXRDZaajFUdkc1egpjWjY4bWR4eDVUTTJEQmI1aW5veDViM21oRTJPQnA4RHd0aXVtam5zekQ4ZEFQWU84bktpTSttMnRNZitpZ2tGCi9La1VLMEdJUEZDOGxvcmtibmFRMENKNlNqV0Y4OFdnOHdnV0RMeE5Ec2l5Y1RERFhqSTR0ekFDY0xTT1l6MnIKV1EvV1NDb2xOVjNCL2krMTY0L3hKOXFpR0M4QUljMUJsUHRvMHhlKzFlLzlrdm51d3VOZnUvdEtyb2Fqcks1SApzYVJyUS9uU05hckRXQ2M0c0NiZVNVTWQ5RTJOK3NnRzZ6OVIvZXZGaHpCWGgrUjc2TWxYWlJxZFpLNnlqWHRTClRDd1g2clcwaTYzMW1VL2NyNzVhVjRLQVJWUzFzUmFEWGtGR2JybHpPY2Z6RHBNbDZ3M3pzRSt1Y09jQ0F3RUEKQVFLQ0FnQURwWXhtTGora3Zuc1lsOG1Td2gwZHQ2MEFqajZmMUFpcHJnMHg3Z2gxNm1MOGMwaDhaam1RRnZwdgpyQ1V4VnF2bE45ZFhtbW9rVVFrNk5wV01yM2dYdmtQdEZVa3Y4eVdtK0NhWTZlZ3ZjekQrbUdWUyt4cDhxMDVmCms5TWVxaUsvOUdIUXRCS3NDZWNsYVgwQ0tleThyNEgzb0Y0NjZ0SkdZUHJuRmhiVldQdzlvcnFqcjFwWEhvRkYKTEZBcHFsQW9rWThpVHVOTDAvM2dQMVVGdFFQT3pqUzhBTG5OMTJSbGpleU9pOGlxTnlnQUQ3d2x1NStmL2pGZgpyVXNsMFhEbERCR1h5a1Y0YytVM1Q4UHIwVFRIU2ZkL2lzaTNlREw3SEszSmh1V3dqeVc0OVJwU0xsc3Q1TFlnCkZFRCs5QllrNU9lV01UWGJ6aFdOclV0eXBxZkpHNHhRK0JnNTFFc0VrTUZlOGRNRnB1V3hhZzNlZnVGbnA0dmUKM0V6VXZWSmM4OHZ6bzE4clN1aEx3Sm5KVnpKdjJZM2lkTk5KRGttU1ltQjc1MEFJWUFkSDMxT0k4SGp0WmZlMApnaGw2SHBHWDl2amZWRE1FOGtJdGN0emsyVUdzcUo0SHFJa3B3cXMvRlcrMWxpSzlIR0ppcUdWYWkrd1BXZXhECkdqZm13R3AyRTR3MlFBb2JYeHhpczY0MnZaTU9QRlkxTUxuQ2djWVF3b3hBc2FEcFVEZlpMc1NKTGdVbHdqQ2MKejgyeTVoVDQvOU84VDhUb1ZiVGxOVnpoclFKUU5CYW16MjZzRFNvRk50WFJMV2s2V05UaC9CV1BVQ1lNdFZCRgowSFlQUGhNUi94NUNOY0NzS25uZTFSUFhWdkJITFMvM1JHbUJ4RVkrU1ZFb0g1cy8rUUtDQVFFQTZHa05MdmExCitKamFzQzhXT091ZmNKL1gxWkhUZ3RLcXBLZWtvTEZKMUIyekVUR2ZyTmhZb2lpL3B4WHNza3NXNm1vSGRSV3AKNDlGSEFmelhtcjJQd0JuNHJBSW9mc1Q5ZVVQVkpkWmtvNnJqUlNSVjY4ZENwK1UvKzlDWG1WMTFLUkZNOExhcwpFajdidTdXbVphblVjclZYdjZMM1VUa0R3Y1R2QnFuRXBwZnZ2TFJpVGJtb2Z5cWdjNytxZm9paVlEVFFwU0RXCkVnYS8xcmJDYzBlZjM2TERXZzBsL01zQUlMaWZLbFR4M3JxY05HK0pvaktSeDl5Y0ZsZWo0VVVNdXYzY1BGczgKMkJuem96U0Rua2tRSUJiNXJwNlViRzlaeVI2NkZpU0Zpd3VXM3JHb3JCdnlXMlB0TFdoVk5MZk0xdmNqWGJQbQppb294NEJZb24yUnRKUUtDQVFFQTdQMDBmWFg0U1RnT1FaMzd2OWRwSVRQMVZpaFBDcEJ5VVlaV0xLNXJaWDRHCkg5THFQdnZZQnVLanREOFZKWmhQbkxqYjcybUMrc1BBKzg5UkoyYzlEUG42MUlVcXNtRDNHVjIrTk93WHRTNkkKdjBBb3dZNFptTk4xNThMTEhnYkNxTVZwV080VkhoRHJGdGRFVndvMzNpOUMxNzd4Z0NsdmFNNHRlS0dzMWlGZQovN0d5R2Nmc1UrOTRVRDRZaXBNcitTOUM5a1drdjcxZnd6ZG1Wa1NraUd5czhBSnBuYUUzU0FyaHZyODZsQ2hoCnltMFhwZEdFSTFIeDd0NURKVC9oV1lSMlB0K2F0SmZCTitzbVhRT0pvR1l2YjIvTjZ4YWc1V0VpVVBaTFBFbjIKd1ROMG5acStOdWtOb0c1M0pyTFNSZnFTbElSdDlVVGlwSjIyQzFMV0d3S0NBUUIyV3lGU25HTlpZWVpsR09XcApRUjBtUHRDc3U2SEtTcnlLTTdHY0FBMUlENFBrcXEvVlZ5djBFT3BoRGNKSG5nUGlodktiUnRnSTQ4ZlVsRTI4ClNQTU84bXI0TmZVbmNleGZ1Qkt4UFRodFBSYVdYSVhCRisyekVRVi9tTi9MUTVQcHdSeThyVnA5eERNa3FjSSsKbmJsS1hWMTlnMkdOcElwc1FIMDFtSGxFR2JZR0ZKckhXRmdkd3JpSm1iOGF4enhoNENPdEpFYkFVVjJhMitHMAowWEh5Y3JJbmh2Q2toMERlYVFidGlPclA4WnFnL1hoSytKUFRBMThkNWEzWWg5Q08zYjh0b1kwZnhEK1dDcVZJCms0NjV1Tm1ZZXJ1OWFRdUJaN3Qra1VUTTVhOEVZOWN4SnQ1S2VsNEx0TWxIbXA2ZmpxWWREd1BGNDlDNGZMQmQKVThoZEFvSUJBRThqZXV6T2dUd0tJUkNlYmh3eEZlVkZrWTdVNVJnMUJrZmRJVmZJWXdyQVc5RXl3SkNKenlqMQpkQTlUNVg3cGJ1UjZBcy9mSHlNWVRaQ0pPYU43NFRJOUpCcmw0VTB4L2pJVlVOZ2hZd1ZZNWNkZjZIeENOS0FKCk5WMVFlajJycWtOcnNQTkdoZnpGVDR3UUZMMHdKMW5sMUY5eFh2b2FYQjdXZ3U2K3BwWFhEUDg3MnFxclRXcjIKRStwUDRpZ2NYMW5XQTNsejVrRTFQdzVVcUxMME56RnJnUkNnN1ozNjRSZ0lzanZkWmZWbHlzb3JSZk5VbE5pcQptNnpWd2Z4bGFaNVlFcGlLV1FJbmp4bGFTRFJWWXhjU0tKTUE5ZldrVjlSaGJIRTIzZ2JpK0NpcVF5NENKN1QwCmZGMXZwaEJoTk1Dem5WRkZLK2IwdXU2WHo5dldMTE1DZ2dFQkFJeUJJM0dzU2g0Z09lb2hvUnhNQ2FkRWUwT2MKcXp5VU5Takg0M0J2Z1QyVlVFV1VSMUpwdmtmLy9BTXNjVUprUmR0Z0hPc25GREJWTzR3SEFwWjdyMkRhclo1NQpGdk9sQVpOeUp0N0RIV3Jqb1hObDlTYXAweEFGUnFGRDcyeUMwNk8rd0g4bFhDTzJWYlROZ0liNkcxMHlLSC9VCjQ3WURkSzVmdlFnMGNuQTAveE9pbXcxTTNKUHFzRE1yVWU5OGdiRHBSMVFxTWt5bFAwQ0RnQUtDMFl4VnJPTlkKUjJKNFpPaGU3V0cyd1FCZDdHK01YWE9QVURGYmFUeFEydjEzREJTOUY4MXVVQndSRzNNWmRYM3pwaThPY0hVMgpQb21WTUJvZXNHc1VaQVdmWG1MUlNKVFg0Umc0aDNtUVg0TmdsdWNnMTlCY2h3SC9VUW5ZYk1HZGlDdz0KLS0tLS1FTkQgUlNBIFBSSVZBVEUgS0VZLS0tLS0K
+    apiServer:
+        image: registry.k8s.io/kube-apiserver:v1.35.2 # The container image used in the API server manifest.
+        admissionControl:
+            - name: PodSecurity # Name is the name of the admission controller.
+              configuration:
+                apiVersion: pod-security.admission.config.k8s.io/v1alpha1
+                defaults:
+                    audit: restricted
+                    audit-version: latest
+                    enforce: baseline
+                    enforce-version: latest
+                    warn: restricted
+                    warn-version: latest
+                exemptions:
+                    namespaces:
+                        - kube-system
+                    runtimeClasses: []
+                    usernames: []
+                kind: PodSecurityConfiguration
+        auditPolicy:
+            apiVersion: audit.k8s.io/v1
+            kind: Policy
+            rules:
+                - level: Metadata
+    controllerManager:
+        image: registry.k8s.io/kube-controller-manager:v1.35.2 # The container image used in the controller manager manifest.
+    proxy:
+        image: registry.k8s.io/kube-proxy:v1.35.2 # The container image used in the kube-proxy manifest.
+        mode: ipvs
+        extraArgs:
+            proxy-mode: ipvs
+            ipvs-scheduler: rr
+            ipvs-min-sync-period: "1s"
+            ipvs-sync-period: "30s"
+            metrics-bind-address: "0.0.0.0:10249"
+            nodeport-addresses: "192.168.0.150/27"
+            conntrack-max-per-core: "65536"
+            conntrack-min: "131072"
+            conntrack-tcp-timeout-established: "86400s"
+    scheduler:
+        image: registry.k8s.io/kube-scheduler:v1.35.2 # The container image used in the scheduler manifest.
+    discovery:
+        enabled: true # Enable the cluster membership discovery feature.
+        registries:
+            kubernetes:
+                disabled: true # Disable Kubernetes discovery registry.
+            service: {}
+    etcd:
+        ca:
+            crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJmakNDQVNPZ0F3SUJBZ0lRS3BDZWRrUWZYcUxIQlNFSlE4clUyREFLQmdncWhrak9QUVFEQWpBUE1RMHcKQ3dZRFZRUUtFd1JsZEdOa01CNFhEVEkyTURReU9UQXdNRGswTVZvWERUTTJNRFF5TmpBd01EazBNVm93RHpFTgpNQXNHQTFVRUNoTUVaWFJqWkRCWk1CTUdCeXFHU000OUFnRUdDQ3FHU000OUF3RUhBMElBQkxUZWlkbmFMdkJYCkNSeGlnTTlnellvdlJSbTA1VDZzQ0RpOFU5bnMxUlVKcUJoMUsycFJ5K1FOQmcwSHdkVG9CRkNUa3ZmRGx1NVAKSSt4azY5Wk1kTFNqWVRCZk1BNEdBMVVkRHdFQi93UUVBd0lDaERBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjRApBUVlJS3dZQkJRVUhBd0l3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFkQmdOVkhRNEVGZ1FVbjJUZEpuUGFKVUFLClptOHk2cWtndGNjTXNuQXdDZ1lJS29aSXpqMEVBd0lEU1FBd1JnSWhBS0Faamo2eEZmM3hGaHRJSlhKcW54S2EKU2NxbGl6bFAyZW9JRkpCaHlydlVBaUVBK0x0eDRRTXVnblZlWGpSODJGOXQrNFU4MG5HM1V6UTRFYkI2aFlnNQpmWEU9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+            key: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSUpHaitheEsva2pLaGo0cTduUGppcThuM2VUVC9VWUJsOXVvRGRVQStMMURvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFdE42SjJkb3U4RmNKSEdLQXoyRE5paTlGR2JUbFBxd0lPTHhUMmV6VkZRbW9HSFVyYWxITAo1QTBHRFFmQjFPZ0VVSk9TOThPVzdrOGo3R1RyMWt4MHRBPT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
+    extraManifests: []
+    inlineManifests: []
+    allowSchedulingOnControlPlanes: true
+---
+apiVersion: v1alpha1
+kind: HostnameConfig
+auto: stable

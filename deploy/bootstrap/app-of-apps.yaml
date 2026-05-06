@@ -21,6 +21,11 @@ spec:
     - https://kubernetes-sigs.github.io/metrics-server
     - https://metallb.github.io/metallb
     - https://argoproj.github.io/argo-helm
+    - https://postfinance.github.io/kubelet-csr-approver
+    - https://charts.jetstack.io
+    - https://kubernetes-sigs.github.io/external-dns
+    - https://kubernetes.github.io/ingress-nginx
+
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application

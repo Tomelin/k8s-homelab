@@ -1,13 +1,9 @@
 ---
 global:
-  domain: argocd.labs.local 
+  domain: argocd.labs.local
 
 redis-ha:
   enabled: false
-
-configs:
-  params:
-    server.insecure: "true"
 
 controller:
   replicas: 1
@@ -26,7 +22,3 @@ repoServer:
 
 applicationSet:
   replicas: 1
-
-configs:
-  params:
-    server.insecure: "true"

@@ -1,0 +1,13 @@
+harbor:
+  exposure:
+    type: ingress
+    ingress:
+      hosts:
+        core: harbor.example.com
+  externalURL: https://harbor.example.com
+  persistence:
+    enabled: true
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
