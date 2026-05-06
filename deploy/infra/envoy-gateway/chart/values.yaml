@@ -6,7 +6,7 @@ gateway-helm:
   kubernetesClusterDomain: homelab
 
   commonLabels:
-   type: addons
+    type: addons
 
   deployment:
     replicas: 1
@@ -43,7 +43,7 @@ externalIP:
 argocd:
   enabled: true
   hostnames:
-    - gitops.synera.com.br
+  - gitops.synera.com.br
 
 namespace: envoy-gateway
 # Namespace where the Envoy Gateway controller is installed
@@ -69,7 +69,7 @@ gateways:
   # HTTP plain Gateway. TLS is terminated upstream by the NLB with an
   # ACM public wildcard cert (attached via aws-load-balancer-ssl-cert).
   # Envoy receives plain HTTP and routes by HTTPRoute host rules.
-  plainHttps:
+  plainHttp:
     enabled: true
     name: http
     listenerName: http
@@ -78,7 +78,6 @@ gateways:
     # Overridden per-env (see values/envoy-gateway-config/base.yaml.gotmpl).
     # The ssl-cert annotation carries the ACM ARN for TLS termination at the NLB.
     serviceAnnotations:
-    annotations:
       metallb.io/address-pool: ip-address-pool-external
 
 envoyProxy:
@@ -95,6 +94,7 @@ envoyProxy:
     # # Common AWS LB Controller v2 annotations applied to every Gateway's NLB.
     annotations:
       metallb.io/address-pool: ip-address-pool-external
+    labels: {}
 
 telemetry:
   metrics:

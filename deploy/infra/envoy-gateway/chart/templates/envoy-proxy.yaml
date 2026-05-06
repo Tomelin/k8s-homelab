@@ -54,8 +54,6 @@ spec:
           resources:
             {{- toYaml $root.Values.envoyProxy.resources | nindent 12 }}
         pod:
-          annotations:
-            ad.datadoghq.com/envoy.logs: '[{"source": "envoy", "service": "{{ $root.Values.telemetry.datadog.service }}"}]'
           nodeSelector:
             {{- range $k, $v := (index $root.Values "nodeSelector") }}
             {{ $k }}: {{ $v | quote }}
@@ -70,10 +68,10 @@ spec:
         name: {{ $root.Values.envoyProxy.service.name | quote }}
         {{- end }}
         annotations:
-          {{- $merged := mergeOverwrite (dict) $root.Values.envoyProxy.service.annotations $gateway.serviceAnnotations }}
+          {{- $merged := mergeOverwrite (dict) $root.Values.envoyProxy.service.annotations ($gateway.serviceAnnotations | default (dict)) }}
           {{- toYaml $merged | nindent 10 }}
         labels:
-          {{- $merged := mergeOverwrite (dict) $root.Values.envoyProxy.service.labels $gateway.serviceLabels }}
+          {{- $merged := mergeOverwrite (dict) $root.Values.envoyProxy.service.labels ($gateway.serviceLabels | default (dict)) }}
           {{- toYaml $merged | nindent 10 }}
 {{- end }}
 {{- end }}
