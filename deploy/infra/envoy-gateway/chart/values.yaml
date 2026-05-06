@@ -81,7 +81,7 @@ gateways:
       metallb.io/address-pool: ip-address-pool-external
 
 envoyProxy:
-  replicas: 2
+  replicas: 1
   resources:
     requests:
       cpu: 200m
