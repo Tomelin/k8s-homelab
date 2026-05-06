@@ -48,25 +48,27 @@ gateways:
     listenerName: http
     port: 80
     envoyProxyName: http-proxy
+    redirectHttps:
+      enabled: false
     annotations: {}
     # Overridden per-env (see values/envoy-gateway-config/base.yaml.gotmpl).
     # The ssl-cert annotation carries the ACM ARN for TLS termination at the NLB.
     serviceAnnotations:
       metallb.io/address-pool: ip-address-pool-external
-    plainHttps:
-      enabled: true
-      name: https
-      listenerName: https
-      port: 443
-      envoyProxyName: https-proxy
-      annotations: {}
-      protocol: HTTPS
-      secretTLSName: envoy-gateway-tls
-      mode: Terminate
-      # Overridden per-env (see values/envoy-gateway-config/base.yaml.gotmpl).
-      # The ssl-cert annotation carries the ACM ARN for TLS termination at the NLB.
-      serviceAnnotations:
-        metallb.io/address-pool: ip-address-pool-external
+  plainHttps:
+    enabled: true
+    name: https
+    listenerName: https
+    port: 443
+    envoyProxyName: https-proxy
+    annotations: {}
+    protocol: HTTPS
+    secretTLSName: envoy-gateway-tls
+    mode: Terminate
+    # Overridden per-env (see values/envoy-gateway-config/base.yaml.gotmpl).
+    # The ssl-cert annotation carries the ACM ARN for TLS termination at the NLB.
+    serviceAnnotations:
+      metallb.io/address-pool: ip-address-pool-external
 
 envoyProxy:
   replicas: 1

@@ -1,0 +1,19 @@
+{{- if and .Values.gateways.plainHttp.enabled .Values.gateways.plainHttp.redirectHttps.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ .Values.gateways.plainHttp.name }}-to-https-redirect
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- toYaml .Values.labels | nindent 4 }}
+spec:
+  parentRefs:
+    - name: {{ .Values.gateways.plainHttp.name }}
+      sectionName: {{ .Values.gateways.plainHttp.listenerName }}
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+{{- end }}
