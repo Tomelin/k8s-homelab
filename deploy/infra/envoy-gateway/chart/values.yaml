@@ -43,7 +43,7 @@ gateways:
   # ACM public wildcard cert (attached via aws-load-balancer-ssl-cert).
   # Envoy receives plain HTTP and routes by HTTPRoute host rules.
   plainHttp:
-    enabled: true
+    enabled: disable
     name: http
     listenerName: http
     port: 80

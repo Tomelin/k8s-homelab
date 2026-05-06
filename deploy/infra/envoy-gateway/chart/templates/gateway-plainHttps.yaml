@@ -16,6 +16,12 @@ spec:
       kind: EnvoyProxy
       name: {{ .Values.gateways.plainHttps.envoyProxyName }}
   listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: All
     - name: {{ .Values.gateways.plainHttps.listenerName }}
       protocol: {{ .Values.gateways.plainHttps.protocol }}
       port: {{ .Values.gateways.plainHttps.port }}

@@ -81,33 +81,3 @@ spec:
           {{- toYaml $merged | nindent 10 }}
 {{- end }}
 {{- end }}
-# ---
-# apiVersion: gateway.envoyproxy.io/v1alpha1
-# kind: EnvoyProxy
-# metadata:
-#   name: {{ .Release.Name }}-envoy-proxy
-# spec:
-#   mergeGateways: true
-#   provider:
-#     type: Kubernetes
-#     kubernetes:
-#       envoyDeployment:
-#         replicas: 1
-#         container:
-#           resources:
-#             requests:
-#               cpu: 150m
-#               memory: 350Mi
-#             limits:
-#               cpu: 500m
-#               memory: 1Gi
-#       envoyService:
-#         type: {{ .Values.envoyConfig.envoyServiceType | quote }}
-#         name: {{ .Values.envoyConfig.envoyServiceName | quote }}
-#         externalTrafficPolicy: Cluster       
-#         {{- if .Values.envoyConfig.serviceAnnotations.enabled }}
-#         annotations:
-#           {{- toYaml .Values.envoyConfig.serviceAnnotations.annotations | nindent 10 }}
-#         {{- end }}
-#         labels:
-#           custom-label: "example"
