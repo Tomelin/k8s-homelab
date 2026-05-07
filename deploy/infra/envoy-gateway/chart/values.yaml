@@ -51,7 +51,8 @@ gateways:
     envoyProxyName: http-proxy
     redirectHttps:
       enabled: false
-    annotations: {}
+    annotations:
+      external-dns.alpha.kubernetes.io/target: "186.216.247.16"
     # Overridden per-env (see values/envoy-gateway-config/base.yaml.gotmpl).
     # The ssl-cert annotation carries the ACM ARN for TLS termination at the NLB.
     serviceAnnotations:
@@ -62,7 +63,8 @@ gateways:
     listenerName: https
     port: 443
     envoyProxyName: https-proxy
-    annotations: {}
+    annotations:
+      external-dns.alpha.kubernetes.io/target: "186.216.247.16"
     protocol: HTTPS
     secretTLSName: envoy-gateway-tls
     mode: Terminate
