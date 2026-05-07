@@ -1,4 +1,4 @@
-olha esse cobackstage:
+backstage:
   image:
     registry: 'docker.io'
     repository: 'backstage/backstage'
