@@ -21,7 +21,14 @@ argo-workflows:
         kind: Gateway
         name: https
         namespace: envoy-gateway
+        # http listener (port 80) - used for internal/local access
         sectionName: http
+      - group: gateway.networking.k8s.io
+        kind: Gateway
+        name: https
+        namespace: envoy-gateway
+        # https listener (port 443) - used for external access via router/NAT
+        sectionName: https
       rules:
       - backendRefs:
         - group: ""
