@@ -4,6 +4,7 @@ kind: HTTPRoute
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "4"
+    external-dns.alpha.kubernetes.io/target: {{ $.Values.argocd.externalDNSTarget | default "" | quote }}
   name: argocd-https
   namespace: argocd
 spec:

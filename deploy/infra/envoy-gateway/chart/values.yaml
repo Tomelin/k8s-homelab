@@ -16,6 +16,7 @@ argocd:
   enabled: true
   hostnames:
   - gitops.synera.com.br
+  externalDNSTarget: "186.216.247.16"
 
 namespace: envoy-gateway
 # Namespace where the Envoy Gateway controller is installed
