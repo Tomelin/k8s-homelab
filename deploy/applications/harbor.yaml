@@ -4,7 +4,7 @@ metadata:
   name: harbor
   namespace: argocd
 spec:
-  project: default
+  project: provisioning
   source:
     repoURL: https://github.com/israel-duarte/homelab-rke2.git
     targetRevision: HEAD

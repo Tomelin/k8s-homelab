@@ -1,13 +1,47 @@
 harbor:
-  exposure:
-    type: ingress
-    ingress:
-      hosts:
-        core: harbor.example.com
-  externalURL: https://harbor.example.com
+  ipFamily:
+    ipv4:
+      enabled: "true"
+    ipv6:
+      enabled: "false"
+
+  externalURL: https://registry.synera.com.br
   persistence:
     enabled: true
   metrics:
     enabled: true
     serviceMonitor:
       enabled: true
+
+  persistence:
+    enabled: true
+    # 'keep' evita que os PVCs sejam deletados se você desinstalar o Helm (segurança de dados)
+    resourcePolicy: "keep"
+    
+    persistentVolumeClaim:
+      registry:
+        # Aqui usamos o PVC que você criou: 'registry-pvc'
+        existingClaim: "registry-pvc"
+      
+      database:
+        # Aqui usamos o seu outro PVC: 'database-pvc'
+        existingClaim: "database-pvc"
+      
+      # Para os componentes abaixo, como você não criou PVCs manuais ainda, 
+      # o Harbor tentará criá-los automaticamente usando a StorageClass informada.
+      jobservice:
+        jobLog:
+          storageClass: "manual"
+          size: 1Gi
+      
+      redis:
+        storageClass: "database"
+        size: 1Gi
+      
+      trivy:
+        storageClass: "manual"
+        size: 5Gi
+
+    imageChartStorage:
+      # Obrigatório ser 'filesystem' para usar os volumes que você configurou
+      type: filesystem

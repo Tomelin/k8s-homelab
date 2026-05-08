@@ -4,7 +4,7 @@ metadata:
   name: backstage
   namespace: argocd
 spec:
-  project: default
+  project: provisioning
   source:
     repoURL: https://github.com/Tomelin/k8s-homelab
     targetRevision: HEAD
