@@ -6,7 +6,7 @@ metadata:
 spec:
   project: provisioning
   source:
-    repoURL: https://github.com/israel-duarte/homelab-rke2.git
+    repoURL: https://github.com/Tomelin/k8s-homelab
     targetRevision: HEAD
     path: deploy/infra/harbor
   destination:
