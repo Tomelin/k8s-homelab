@@ -33,10 +33,12 @@ harbor:
         jobLog:
           storageClass: "manual"
           size: 1Gi
+          existingClaim: database-pvc
       
       redis:
         storageClass: "database"
         size: 1Gi
+        existingClaim: database-pvc
       
       trivy:
         storageClass: "manual"
