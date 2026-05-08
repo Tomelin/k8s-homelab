@@ -59,15 +59,15 @@ spec:
         container:
           resources:
             {{- toYaml $root.Values.envoyProxy.resources | nindent 12 }}
-        pod:
-          nodeSelector:
-            {{- range $k, $v := (index $root.Values "nodeSelector") }}
-            {{ $k }}: {{ $v | quote }}
-            {{- end }}
-          tolerations:
-            - key: "addons"
-              operator: "Exists"
-              effect: "NoSchedule"
+        # pod:
+        #   nodeSelector:
+        #     {{- range $k, $v := (index $root.Values "nodeSelector") }}
+        #     {{ $k }}: {{ $v | quote }}
+        #     {{- end }}
+        #   tolerations:
+        #     - key: "addons"
+        #       operator: "Exists"
+        #       effect: "NoSchedule"
       envoyService:
         type: {{ $root.Values.envoyProxy.service.type }}
         {{- if $root.Values.envoyProxy.service.name  }}
