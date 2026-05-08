@@ -8,6 +8,7 @@ metadata:
     {{- toYaml .Values.labels | nindent 4 }}
   annotations:
     {{- toYaml .Values.gateways.plainHttp.annotations | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   gatewayClassName: envoy
   infrastructure:
