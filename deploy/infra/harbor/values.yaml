@@ -33,17 +33,17 @@ harbor:
         jobLog:
           storageClass: "database"
           size: 1Gi
-          existingClaim: database-pvc
+          # existingClaim: database-pvc
       
       redis:
         storageClass: "database"
         size: 1Gi
-        existingClaim: database-pvc
+        # existingClaim: database-pvc
       
       trivy:
         storageClass: "database"
         size: 5Gi
-        existingClaim: database-pvc
+        # existingClaim: database-pvc
 
     imageChartStorage:
       # Obrigatório ser 'filesystem' para usar os volumes que você configurou
