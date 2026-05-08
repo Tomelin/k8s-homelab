@@ -5,9 +5,6 @@ harbor:
     ipv6:
       enabled: "false"
 
-  externalURL: https://registry.synera.com.br
-  persistence:
-    enabled: true
   metrics:
     enabled: true
     serviceMonitor:
