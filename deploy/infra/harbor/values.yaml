@@ -22,16 +22,16 @@ harbor:
       
       jobservice:
         jobLog:
-          storageClass: "database" # Vai precisar de um PV manual chamado 'jobservice-pv'
-          size: 1Gi
+          existingClaim: "harbor-shared-pvc"
+          subPath: "jobservice"
       
       redis:
-        storageClass: "database" # Vai precisar de um PV manual chamado 'redis-pv'
-        size: 1Gi
+        existingClaim: "harbor-shared-pvc"
+        subPath: "redis"
       
       trivy:
-        storageClass: "database" # Vai precisar de um PV manual chamado 'trivy-pv'
-        size: 5Gi
+        existingClaim: "harbor-shared-pvc"
+        subPath: "trivy"
 
     imageChartStorage:
       type: filesystem
