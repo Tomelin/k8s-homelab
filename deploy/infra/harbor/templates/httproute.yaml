@@ -13,10 +13,10 @@ spec:
     {{- end }}
   parentRefs:
     - name: https
-      namespace: {{ .Values.namespace }}
+      namespace: {{ .Values.httpRoute.namespace }}
       sectionName: https
     - name: http
-      namespace: {{ .Values.namespace }}
+      namespace: {{ .Values.httpRoute.namespace }}
       sectionName: http
   rules:
   - matches:
