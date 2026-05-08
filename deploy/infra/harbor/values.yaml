@@ -45,3 +45,9 @@ harbor:
     imageChartStorage:
       # Obrigatório ser 'filesystem' para usar os volumes que você configurou
       type: filesystem
+
+httpRoute:
+  enabled: true
+  hostnames:
+  - registry.synera.com.br
+  externalDNSTarget: "186.216.247.16"
