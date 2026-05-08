@@ -19,12 +19,12 @@ harbor:
       registry:
         # Aqui usamos o PVC que você criou: 'registry-pvc'
         existingClaim: "registry-pvc"
-        storageClass: "manual"
+        #storageClass: "registry"
 
       database:
         # Aqui usamos o seu outro PVC: 'database-pvc'
         existingClaim: "database-pvc"
-        storageClass: "database"
+        #storageClass: "database"
         size: 20Gi
       
       # Para os componentes abaixo, como você não criou PVCs manuais ainda, 
