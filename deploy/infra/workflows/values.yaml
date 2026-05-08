@@ -7,8 +7,8 @@ argo-workflows:
     rbac:
       create: true
   server:
-    authModes:
-    - server
+    # authModes:
+    # - server
     secure: false 
     httproute:
       enabled: true
