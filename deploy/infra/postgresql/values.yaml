@@ -20,6 +20,10 @@
 
 global:
   defaultStorageClass: database
+  postgresql:
+    auth:
+      username: postgres
+      database: appdb
 
 
 postgresql:
