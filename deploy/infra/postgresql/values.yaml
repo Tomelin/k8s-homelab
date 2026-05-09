@@ -21,23 +21,24 @@
 global:
   defaultStorageClass: database
 
+
 postgresql:
   # O chart recomenda número ímpar e 3 réplicas para quorum; usando 1 aqui
   # porque o PVC existente database-pvc é único e normalmente ReadWriteOnce.
   replicaCount: 1
 
-  username: postgres
-  database: appdb
-
-  # Não versionar senhas reais neste arquivo. Informe em tempo de instalação:
-  #   --set postgresql.password='...' \
-  #   --set postgresql.repmgrPassword='...' \
-  #   --set pgpool.adminPassword='...' \
-  #   --set pgpool.srCheckPassword='...'
-  password: ""
-  repmgrUsername: repmgr
-  repmgrDatabase: repmgr
-  repmgrPassword: ""
+  # Estrutura correta para postgresql-ha chart v18+
+  auth:
+    username: postgres
+    database: appdb
+    # Não versionar senhas reais neste arquivo. Informe em tempo de instalação:
+    #   --set postgresql.auth.password='...' \
+    #   --set postgresql.auth.repmgrPassword='...' \
+    #   --set pgpool.adminPassword='...'
+    password: ""
+    repmgrUsername: repmgr
+    repmgrDatabase: repmgr
+    repmgrPassword: ""
 
   podAntiAffinityPreset: soft
 
