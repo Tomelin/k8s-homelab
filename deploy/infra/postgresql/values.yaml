@@ -35,14 +35,14 @@ postgresql:
   auth:
     username: postgres
     database: appdb
-    # Não versionar senhas reais neste arquivo. Informe em tempo de instalação:
-    #   --set postgresql.auth.password='...' \
-    #   --set postgresql.auth.repmgrPassword='...' \
-    #   --set pgpool.adminPassword='...'
-    password: ""
+    # Senha gerenciada via secret externo — NÃO versionar senhas aqui.
+    # Crie o secret manualmente (ou via External Secrets Operator):
+    #   kubectl create secret generic postgresql-credentials -n database \
+    #     --from-literal=password='<senha-postgres>' \
+    #     --from-literal=repmgr-password='<senha-repmgr>'
+    existingSecret: postgresql-credentials
     repmgrUsername: repmgr
     repmgrDatabase: repmgr
-    repmgrPassword: ""
 
   podAntiAffinityPreset: soft
 
