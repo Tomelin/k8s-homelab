@@ -4,7 +4,7 @@ metadata:
   name: postgres-route
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "psql.synera.com.br"
-    external-dns.alpha.kubernetes.io/target: "192.168.0.160"
+    external-dns.alpha.kubernetes.io/target: "192.168.0.170"
 spec:
   parentRefs:
   - name: pgsql-gw
