@@ -1,0 +1,39 @@
+{{- if .Values.gateways.internalHttps.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ .Values.gateways.internalHttps.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- toYaml .Values.labels | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.gateways.internalHttps.annotations | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  gatewayClassName: envoy
+  infrastructure:
+    parametersRef:
+      group: gateway.envoyproxy.io
+      kind: EnvoyProxy
+      name: {{ .Values.gateways.internalHttps.envoyProxyName }}
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: {{ .Values.gateways.internalHttps.listenerName }}
+      protocol: {{ .Values.gateways.internalHttps.protocol }}
+      port: {{ .Values.gateways.internalHttps.port }}
+      hostname: {{ .Values.listenerHostname | quote }}
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: {{ .Values.gateways.internalHttps.secretTLSName }}
+            namespace: {{ .Values.namespace }}
+        mode: {{ .Values.gateways.internalHttps.mode }}
+      allowedRoutes:
+        namespaces:
+          from: All
+{{- end }}
