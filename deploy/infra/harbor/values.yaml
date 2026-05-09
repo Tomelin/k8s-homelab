@@ -62,13 +62,10 @@ harbor:
       enabled: true
       certSource: none
     route:
-      annotations:
-        # metallb.io/address-pool: internal
-        external-dns.alpha.kubernetes.io/target: "192.168.0.170"
       parentRefs:
-        - name: envoy-gateway
-          namespace: envoy-gateway-system
-          sectionName: https
+        - name: internal-https
+          namespace: envoy-gateway
+          sectionName: internal-https
           group: gateway.networking.k8s.io
           kind: Gateway
       hosts:
