@@ -29,7 +29,7 @@ global:
 postgresql:
   # O chart recomenda número ímpar e 3 réplicas para quorum; usando 1 aqui
   # porque o PVC existente database-pvc é único e normalmente ReadWriteOnce.
-  replicaCount: 2
+  replicaCount: 1
 
   # Estrutura correta para postgresql-ha chart v18+
   auth:
