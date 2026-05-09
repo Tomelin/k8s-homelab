@@ -1,0 +1,17 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: pg-gateway
+  annotations:
+    metallb.io/address-pool: primary
+    external-dns.alpha.kubernetes.io/target: "192.168.0.160"
+spec:
+  gatewayClassName: envoy
+  infrastructure:
+    parametersRef:
+      group: gateway.envoyproxy.io
+      kind: EnvoyProxy
+  listeners:
+  - name: postgres
+    protocol: TCP
+    port: 5432
