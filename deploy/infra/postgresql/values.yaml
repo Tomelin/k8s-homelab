@@ -1,26 +1,119 @@
+# Values para o chart Bitnami PostgreSQL HA.
+# Instalação:
+#   helm install my-release oci://registry-1.docker.io/bitnamicharts/postgresql-ha \
+#     --values deploy/helm/postgresql-ha-values.yaml
+#
+# Storage informado para o cluster Kubernetes:
+#   StorageClass: database
+#   PersistentVolume: database-pv
+#   PersistentVolumeClaim: database-pvc
+#
+# Observação importante:
+# - O chart aceita persistence.existingClaim para usar um PVC já criado.
+# - Segundo a documentação do chart, quando existingClaim é usado todos os
+#   pods PostgreSQL compartilham o mesmo PVC; com replicas > 1 isso só é útil
+#   em casos muito específicos. Por isso, esta configuração ativa usa 1 réplica
+#   PostgreSQL para compatibilidade com o PVC database-pvc.
+# - Para alta disponibilidade real com 3 réplicas, prefira remover
+#   persistence.existingClaim e deixar o chart criar um PVC por réplica usando
+#   persistence.storageClass: database.
+
+global:
+  defaultStorageClass: database
+
 postgresql:
-  global:
-    storageClass: ""
-  auth:
-    database: "homelab"
-    username: "admin"
-    password: "changeme"
-  primary:
-    # No chart da Bitnami, para usar emptyDir em vez de PVC:
-    persistence:
-      enabled: false
-    # Isso garante que ele não tente criar o VolumeClaimTemplate
-    extraVolumes:
-      - name: data
-        emptyDir:
-          medium: "Memory"
-    extraVolumeMounts:
-      - name: data
-        mountPath: /bitnami/postgresql
-    resources:
-      limits:
-        cpu: 500m
-        memory: 512Mi
-      requests:
-        cpu: 100m
-        memory: 256Mi
+  # O chart recomenda número ímpar e 3 réplicas para quorum; usando 1 aqui
+  # porque o PVC existente database-pvc é único e normalmente ReadWriteOnce.
+  replicaCount: 1
+
+  username: postgres
+  database: appdb
+
+  # Não versionar senhas reais neste arquivo. Informe em tempo de instalação:
+  #   --set postgresql.password='...' \
+  #   --set postgresql.repmgrPassword='...' \
+  #   --set pgpool.adminPassword='...' \
+  #   --set pgpool.srCheckPassword='...'
+  password: ""
+  repmgrUsername: repmgr
+  repmgrDatabase: repmgr
+  repmgrPassword: ""
+
+  podAntiAffinityPreset: soft
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+pgpool:
+  replicaCount: 1
+  adminUsername: admin
+  adminPassword: ""
+  srCheckUsername: sr_check_user
+  srCheckPassword: ""
+  srCheckDatabase: postgres
+
+  podAntiAffinityPreset: soft
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+persistence:
+  enabled: true
+  existingClaim: database-pvc
+  storageClass: database
+  mountPath: /bitnami/postgresql
+  accessModes:
+    - ReadWriteOnce
+  size: 8Gi
+
+persistentVolumeClaimRetentionPolicy:
+  enabled: true
+  whenScaled: Retain
+  whenDeleted: Retain
+
+service:
+  type: ClusterIP
+  ports:
+    postgresql: 5432
+
+metrics:
+  enabled: true
+  service:
+    enabled: true
+    type: ClusterIP
+    ports:
+      metrics: 9187
+  serviceMonitor:
+    enabled: false
+
+volumePermissions:
+  # Útil quando o PV/PVC foi criado fora do chart e precisa ajustar permissões
+  # para o usuário não-root 1001 usado pelas imagens Bitnami.
+  enabled: true
+
+backup:
+  enabled: false
+
+# Alternativa para HA real com provisionamento dinâmico:
+# 1) Garanta que a StorageClass database consiga criar um volume por réplica.
+# 2) Remova/comente persistence.existingClaim.
+# 3) Altere postgresql.replicaCount para 3 e, se necessário, pgpool.replicaCount para 2.
+#
+# postgresql:
+#   replicaCount: 3
+# pgpool:
+#   replicaCount: 2
+# persistence:
+#   enabled: true
+#   storageClass: database
+#   existingClaim: ""
