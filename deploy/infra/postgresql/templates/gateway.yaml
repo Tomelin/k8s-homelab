@@ -5,6 +5,7 @@ metadata:
   namespace: envoy-gateway
   annotations:
     metallb.io/address-pool: internal
+    external-dns.alpha.kubernetes.io/hostname: "psql.synera.com.br"
     external-dns.alpha.kubernetes.io/target: "192.168.0.170"
 spec:
   gatewayClassName: envoy
