@@ -90,7 +90,7 @@ gateways:
     # Overridden per-env (see values/envoy-gateway-config/base.yaml.gotmpl).
     # The ssl-cert annotation carries the ACM ARN for TLS termination at the NLB.
     serviceAnnotations:
-      metallb.io/address-pool: primary
+      metallb.io/address-pool: internal
       external-dns.alpha.kubernetes.io/target: "192.168.0.160"
 
 envoyProxy:
