@@ -28,6 +28,11 @@ harbor:
     enabled: true
     resourcePolicy: "keep"
     persistentVolumeClaim:
+
+      # database:
+      #     existingClaim: "harbor-shared-pvc"
+      #     subPath: "database"
+
       registry:
         existingClaim: "registry-pvc"
       # database interno desabilitado (usando external)
@@ -57,6 +62,9 @@ harbor:
       enabled: true
       certSource: none
     route:
+      annotations:
+        metallb.io/address-pool: internal
+        external-dns.alpha.kubernetes.io/target: "192.168.0.170"
       parentRefs:
         - name: envoy-gateway
           namespace: envoy-gateway-system
