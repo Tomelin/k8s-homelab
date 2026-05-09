@@ -11,14 +11,28 @@ harbor:
     serviceMonitor:
       enabled: true
 
+  database:
+    type: external
+    external:
+      host: postgresql.database.svc.cluster.local
+      port: "5432"
+      username: harbor
+      coreDatabase: harbor
+      # A chave dentro do secret DEVE ser "password" (exigência do chart)
+      existingSecret: harbor-db-secret
+      sslmode: disable
+
+
+
   persistence:
     enabled: true
     resourcePolicy: "keep"
     persistentVolumeClaim:
       registry:
         existingClaim: "registry-pvc"
-      database:
-        existingClaim: "database-pvc"
+      # database interno desabilitado (usando external)
+      # database:
+      #   existingClaim: "database-pvc"
       
       jobservice:
         jobLog:
@@ -37,9 +51,17 @@ harbor:
       type: filesystem
 
 
-httpRoute:
-  enabled: true
-  hostnames:
-  - registry.synera.com.br
-  externalDNSTarget: "186.216.247.16"
-  namespace: envoy-gateway
+  expose:
+    type: route
+    tls:
+      enabled: true
+      certSource: none
+    route:
+      parentRefs:
+        - name: envoy-gateway
+          namespace: envoy-gateway-system
+          sectionName: https
+          group: gateway.networking.k8s.io
+          kind: Gateway
+      hosts:
+        - registry.synera.com.br
