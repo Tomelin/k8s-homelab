@@ -103,7 +103,7 @@ config:
       - KubeDiscovery:
           href: https://discovery.synera.com.br/
           description: Cluster inventory and documentation
-          icon: discovery.png
+          icon: searxng.png
       - Synera:
           href: https://synera.com.br/
           description: Synera website
