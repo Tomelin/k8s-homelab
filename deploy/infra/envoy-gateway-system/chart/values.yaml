@@ -22,6 +22,14 @@ gatewayapi:
         controllerName: gateway.envoyproxy.io/gatewayclass-controller
       provider:
         type: Kubernetes
+      # Envoy Gateway Admin Console is built in to the control plane since Envoy Gateway v1.5.
+      # Keep it bound to localhost and access it through kubectl port-forward:
+      # kubectl port-forward -n envoy-gateway-system deployment/envoy-gateway 19000:19000
+      admin:
+        address:
+          host: "127.0.0.1"
+          port: 19000
+        enablePprof: false
       logging:
         level:
           default: info
