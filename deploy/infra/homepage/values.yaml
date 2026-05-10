@@ -156,6 +156,10 @@ config:
             href: https://kubernetes.default.svc
             description: Kubernetes cluster
             icon: tempo.svg
+        - PG Admin:
+            href: https://kubernetes.default.svc
+            description: Kubernetes cluster
+            icon: postgresql.svg
   widgets.yaml: |
     - kubernetes:
         cluster:
