@@ -97,5 +97,5 @@ config:
     - search:
         provider: duckduckgo
         target: _blank
-  docker.yaml: ""
-  proxmox.yaml: ""
+  docker.yaml: "{}"
+  proxmox.yaml: "{}"
