@@ -83,24 +83,23 @@ config:
             - abbr: GH
               href: https://github.com/
   services.yaml: |
-    - Top Services:
-        - Kubernetes:
-            href: https://kubernetes.default.svc
-            description: Kubernetes cluster
-            icon: kubernetes.png
-        - Argo Workflows:
-            href: https://ops.synera.com.br/
-            description: GitOps control plane
-            icon:  argo-cd.png
-    - Cluster Management:
+    - Workflows:
         - Argo CD:
             href: https://ops.synera.com.br/
             description: GitOps control plane
             icon: argo-cd.png
-        - Homepage:
-            href: https://ihome.synera.com.br/
-            description: Synera homelab dashboard
-            icon: homepage.png
+        - Argo Workflows:
+            href: https://ops.synera.com.br/
+            description: GitOps control plane
+            icon:  argo-cd.png
+        - Argo Events:
+            href: https://ops.synera.com.br/
+            description: GitOps control plane
+            icon:  argo-cd.png
+        - Github Actions:
+            href: https://github.com/
+            description: Github Actions
+            icon: github.svg
     - Platforms:
       - IDP:
           href: https://idp.synera.com.br/
@@ -131,6 +130,27 @@ config:
           href: https://portainer.synera.com.br/
           description: Container management
           icon: kubernetes.png
+      - Container Registry:
+          href: https://portainer.synera.com.br/
+          description: Container management
+          icon: harbor.svg
+      - Cost Management:
+          href: https://kubernetes.default.svc
+          description: Kubernetes cluster
+          icon: opencost.png
+    - Monitoring:
+        - Prometheus:
+            href: https://kubernetes.default.svc
+            description: Kubernetes cluster
+            icon: prometheus.png
+        - Alertmanager:
+            href: https://kubernetes.default.svc
+            description: Kubernetes cluster
+            icon: prometheus.png
+        - Grafana:
+            href: https://kubernetes.default.svc
+            description: Kubernetes cluster
+            icon: grafana.png
   widgets.yaml: |
     - kubernetes:
         cluster:
