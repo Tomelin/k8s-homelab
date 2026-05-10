@@ -104,7 +104,11 @@ config:
         memory: true
         network: default
     - search:
-        provider: duckduckgo
+        provider: google
         target: _blank
+    - datetime:
+        text_size: xl
+        format:
+          timeStyle: short
   docker.yaml: "{}"
   proxmox.yaml: "{}"
