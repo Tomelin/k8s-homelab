@@ -56,8 +56,16 @@ config:
   kubernetes.yaml: |
     mode: cluster
   settings.yaml: |
-    title: Synera Home
+    title: Tomelin Homelab
     language: pt-BR
+    background:
+      image: "https://plus.unsplash.com/premium_photo-1682091872078-46c5ed6a006d?q=80&w=1074&auto=format&fit=crop"
+      blur: sm
+      saturate: 50
+      brightness: 50
+      opacity: 50
+    theme: dark
+    color: slate
   custom.css: ""
   custom.js: ""
   bookmarks.yaml: |
