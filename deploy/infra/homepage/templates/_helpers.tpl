@@ -1,0 +1,23 @@
+{{- define "homepage.name" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "homepage.fullname" -}}
+{{- if .Values.fullnameOverride -}}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- include "homepage.name" . -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "homepage.labels" -}}
+app.kubernetes.io/name: {{ include "homepage.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
+
+{{- define "homepage.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "homepage.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
