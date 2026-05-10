@@ -105,7 +105,7 @@ config:
           icon: notediscovery.png
       - AI WEB UI:
           href: https://synera.com.br/
-          description: Synera website
+          description: Integration Automation with AI Platform
           icon: flowise.png
     - Workflows:
         - Argo CD:
@@ -114,49 +114,49 @@ config:
             icon: argo-cd.png
         - Argo Workflows:
             href: https://ops.synera.com.br/
-            description: GitOps control plane
+            description: GitOps Workflows
             icon:  argo-cd.png
         - Argo Events:
             href: https://ops.synera.com.br/
-            description: GitOps control plane
+            description: Trigger and Events
             icon:  argo-cd.png
         - Github Actions:
             href: https://github.com/
             description: Github Actions
             icon: github.svg
     - Infrastructure:
-      - PI-Hole:
+      - CloudFlared:
           href: https://pihole.synera.com.br/
-          description: Network-wide ad blocker
-          icon: pi-hole.svg
+          description: DNS
+          icon: cloudflared.svg
       - Kube WEB UI:
           href: https://portainer.synera.com.br/
           description: Container management
           icon: kubernetes.png
       - Container Registry:
           href: https://portainer.synera.com.br/
-          description: Container management
+          description: Container Registry
           icon: harbor.svg
       - Cost Management:
           href: https://kubernetes.default.svc
-          description: Kubernetes cluster
+          description: Cost Management
           icon: opencost.png
       - PG Admin:
             href: https://kubernetes.default.svc
-            description: Kubernetes cluster
+            description: PostgreSQL Admin
             icon: postgresql.svg
     - Monitoring:
         - Prometheus:
             href: https://kubernetes.default.svc
-            description: Kubernetes cluster
+            description: Metrics and alerting
             icon: prometheus.png
         - Alertmanager:
             href: https://kubernetes.default.svc
-            description: Kubernetes cluster
+            description: Alert rules and notifications
             icon: prometheus.png
         - Grafana:
             href: https://kubernetes.default.svc
-            description: Kubernetes cluster
+            description: Visualization and dashboards
             icon: grafana.png
         - Metrics:
             href: https://kubernetes.default.svc
