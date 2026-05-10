@@ -18,6 +18,7 @@ argocd:
   - gitops.synera.com.br
   internalhostnames:
   - ops.synera.com.br
+  - igitops.synera.com.br
   externalDNSTarget: "186.216.247.16"
 
 namespace: envoy-gateway

@@ -66,62 +66,15 @@ config:
             - abbr: GH
               href: https://github.com/
   services.yaml: |
-    - GitOps & Automation:
-        - ArgoCD:
-            href: https://argo.synera.com.br
+    - Cluster Management:
+        - Argo CD:
+            href: https://ops.synera.com.br/
             description: GitOps control plane
             icon: argo-cd.png
-        - Workflows:
-            href: https://workflows.synera.com.br
-            description: Workflow automation
-            icon: argo-workflows.png
-        - GitHUB:
-            href: https://github.synera.com.br
-            description: Source code management
-            icon: github.png
-    - Platform & Identity:
-        - Platform UI:
-            href: https://platform.synera.com.br
-            description: Synera platform portal
-            icon: kubernetes.png
-        - Kratos:
-            href: https://auth.synera.com.br
-            description: Identity and authentication
-            icon: ory.png
-        - Loackari Vault:
-            href: http://vault.synera.com.br
-            description: Secrets management
-            icon: vault.png
-        - KubeDiscovery:
-            href: https://kubediscovery.synera.com.br
-            description: Kubernetes discovery portal
-            icon: kubernetes.png
-        - Synera-docs:
-            href: https://docs.synera.com.br
-            description: Synera documentation
-            icon: bookstack.png
-    - Registry & Data:
-        - Harbor:
-            href: https://registry.synera.com.br
-            description: Container registry
-            icon: harbor.png
-        - PGAdmin:
-            href: http://psql.synera.com.br
-            description: PostgreSQL administration
-            icon: postgres.png
-    - Observability & Cost:
-        - Cost Optimizer:
-            href: http://cost-optimizer.synera.com.br
-            description: Cost optimization dashboard
-            icon: opencost.png
-        - Prometheus:
-            href: http://prometheus.synera.com.br
-            description: Metrics and alerting
-            icon: prometheus.png
-        - Grafana:
-            href: http://grafana.synera.com.br
-            description: Observability dashboards
-            icon: grafana.png
+        - Homepage:
+            href: https://ihome.synera.com.br/
+            description: Synera homelab dashboard
+            icon: homepage.png
   widgets.yaml: |
     - kubernetes:
         cluster:
