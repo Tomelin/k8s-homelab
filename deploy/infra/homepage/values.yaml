@@ -64,6 +64,16 @@ config:
       blur: md
       brightness: 50
       saturate: 50
+    layout:
+      Top Services:
+        style: row
+        columns: 4
+      Cluster Management:
+        style: row
+        columns: 4
+      Platforms:
+        style: row
+        columns: 4
 
   custom.css: ""
   custom.js: ""
