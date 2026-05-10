@@ -63,6 +63,7 @@ config:
       opacity: 50
       blur: md
       brightness: 50
+      saturate: 50
 
   custom.css: ""
   custom.js: ""
