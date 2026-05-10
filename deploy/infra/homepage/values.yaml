@@ -81,7 +81,7 @@ config:
         - Argo Workflows:
             href: https://ops.synera.com.br/
             description: GitOps control plane
-            icon: workflows.png
+            icon: argo-cd.png.png
     - Cluster Management:
         - Argo CD:
             href: https://ops.synera.com.br/
