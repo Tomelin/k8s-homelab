@@ -89,7 +89,7 @@ config:
     - Platforms:
       - IDP:
           href: https://idp.synera.com.br/
-          description: Identity Provider
+          description: Identity Developer Portal with Backstage
           icon: notediscovery.png
       - Lockari Vault:
           href: https://vault.synera.com.br/
