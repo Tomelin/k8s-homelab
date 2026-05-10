@@ -83,23 +83,6 @@ config:
             - abbr: GH
               href: https://github.com/
   services.yaml: |
-    - Workflows:
-        - Argo CD:
-            href: https://ops.synera.com.br/
-            description: GitOps control plane
-            icon: argo-cd.png
-        - Argo Workflows:
-            href: https://ops.synera.com.br/
-            description: GitOps control plane
-            icon:  argo-cd.png
-        - Argo Events:
-            href: https://ops.synera.com.br/
-            description: GitOps control plane
-            icon:  argo-cd.png
-        - Github Actions:
-            href: https://github.com/
-            description: Github Actions
-            icon: github.svg
     - Platforms:
       - IDP:
           href: https://idp.synera.com.br/
@@ -121,6 +104,24 @@ config:
           href: https://synera.com.br/
           description: Synera website
           icon: flowise.png
+    - Workflows:
+        - Argo CD:
+            href: https://ops.synera.com.br/
+            description: GitOps control plane
+            icon: argo-cd.png
+        - Argo Workflows:
+            href: https://ops.synera.com.br/
+            description: GitOps control plane
+            icon:  argo-cd.png
+        - Argo Events:
+            href: https://ops.synera.com.br/
+            description: GitOps control plane
+            icon:  argo-cd.png
+        - Github Actions:
+            href: https://github.com/
+            description: Github Actions
+            icon: github.svg
+
     - Infrastructure:
       - PI-Hole:
           href: https://pihole.synera.com.br/
@@ -151,6 +152,10 @@ config:
             href: https://kubernetes.default.svc
             description: Kubernetes cluster
             icon: grafana.png
+        - Metrics:
+            href: https://kubernetes.default.svc
+            description: Kubernetes cluster
+            icon: tempo.svg
   widgets.yaml: |
     - kubernetes:
         cluster:
