@@ -81,7 +81,7 @@ config:
         - Argo Workflows:
             href: https://ops.synera.com.br/
             description: GitOps control plane
-            icon: argo-cd.png.png
+            icon: workflows.png
     - Cluster Management:
         - Argo CD:
             href: https://ops.synera.com.br/
@@ -108,6 +108,10 @@ config:
           href: https://synera.com.br/
           description: Synera website
           icon: notediscovery.png
+      - AI WEB UI:
+          href: https://synera.com.br/
+          description: Synera website
+          icon: aistudio.png
   widgets.yaml: |
     - kubernetes:
         cluster:
