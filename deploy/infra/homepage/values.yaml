@@ -121,7 +121,7 @@ config:
       - AI WEB UI:
           href: https://synera.com.br/
           description: Synera website
-          icon: aistudio.png
+          icon: google-gemini.png
   widgets.yaml: |
     - kubernetes:
         cluster:
