@@ -66,6 +66,15 @@ config:
             - abbr: GH
               href: https://github.com/
   services.yaml: |
+    - Top Services:
+        - Kubernetes:
+            href: https://kubernetes.default.svc
+            description: Kubernetes cluster
+            icon: kubernetes.png
+        - Argo Workflows:
+            href: https://ops.synera.com.br/
+            description: GitOps control plane
+            icon: workflows.png
     - Cluster Management:
         - Argo CD:
             href: https://ops.synera.com.br/
