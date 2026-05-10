@@ -65,7 +65,7 @@ config:
       brightness: 50
       saturate: 50
     layout:
-      Top Services:
+      Workflows:
         style: row
         columns: 4
       Cluster Management:
@@ -105,11 +105,11 @@ config:
           href: https://idp.synera.com.br/
           description: Identity Provider
           icon: notediscovery.png
-      - LockariVault:
+      - Lockari Vault:
           href: https://vault.synera.com.br/
           description: Secrets management
           icon: vault.png
-      - KubeDiscovery:
+      - Kube Discovery:
           href: https://discovery.synera.com.br/
           description: Cluster inventory and documentation
           icon: searxng.png
