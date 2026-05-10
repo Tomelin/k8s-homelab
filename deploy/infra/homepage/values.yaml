@@ -95,7 +95,7 @@ config:
       - IDP:
           href: https://idp.synera.com.br/
           description: Identity Provider
-          icon: idp.png
+          icon: notediscovery.png
       - LockariVault:
           href: https://vault.synera.com.br/
           description: Secrets management
@@ -107,7 +107,7 @@ config:
       - Synera:
           href: https://synera.com.br/
           description: Synera website
-          icon: synera.png
+          icon: notediscovery.png
   widgets.yaml: |
     - kubernetes:
         cluster:
