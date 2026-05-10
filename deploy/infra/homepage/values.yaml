@@ -55,6 +55,7 @@ podSecurityContext:
 config:
   kubernetes.yaml: |
     mode: cluster
+    gateway: true
   settings.yaml: |
     title: Tomelin Homelab
     language: pt-BR

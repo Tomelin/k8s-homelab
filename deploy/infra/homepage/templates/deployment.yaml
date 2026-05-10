@@ -15,6 +15,8 @@ spec:
       {{- include "homepage.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        checksum/config: {{ .Values.config | toYaml | sha256sum | quote }}
       labels:
         {{- include "homepage.selectorLabels" . | nindent 8 }}
     spec:
