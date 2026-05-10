@@ -65,10 +65,10 @@ config:
       brightness: 50
       saturate: 50
     layout:
-      Workflows:
+      Platforms:
         style: row
         columns: 4
-      Platforms:
+      Workflows:
         style: row
         columns: 4
       Infrastructure:
