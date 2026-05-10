@@ -91,7 +91,7 @@ config:
         - Argo Workflows:
             href: https://ops.synera.com.br/
             description: GitOps control plane
-            icon: workflows.png
+            icon:  argo-cd.png
     - Cluster Management:
         - Argo CD:
             href: https://ops.synera.com.br/
@@ -121,7 +121,16 @@ config:
       - AI WEB UI:
           href: https://synera.com.br/
           description: Synera website
-          icon: google-gemini.png
+          icon: flowise.png
+    - Infrastructure:
+      - PI-Hole:
+          href: https://pihole.synera.com.br/
+          description: Network-wide ad blocker
+          icon: pihole.png
+      - Kube WEB UI:
+          href: https://portainer.synera.com.br/
+          description: Container management
+          icon: kubernetes.png
   widgets.yaml: |
     - kubernetes:
         cluster:
