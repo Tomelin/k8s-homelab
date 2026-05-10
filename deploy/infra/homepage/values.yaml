@@ -1,0 +1,100 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/gethomepage/homepage
+  tag: latest
+  pullPolicy: Always
+
+namespace: homepage
+
+serviceAccount:
+  create: true
+  automountServiceAccountToken: true
+
+service:
+  type: ClusterIP
+  port: 3000
+  targetPort: http
+
+httproute:
+  enabled: true
+  name: homepage
+  hostname: ihome.synera.com.br
+  externalDNSTarget: "192.168.0.171"
+  parentRefs:
+    - name: internal-https
+      namespace: envoy-gateway
+      sectionName: http
+    - name: internal-https
+      namespace: envoy-gateway
+      sectionName: internal-https
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+
+config:
+  kubernetes.yaml: |
+    mode: cluster
+  settings.yaml: |
+    title: Synera Home
+    language: pt-BR
+  custom.css: ""
+  custom.js: ""
+  bookmarks.yaml: |
+    - Developer:
+        - Github:
+            - abbr: GH
+              href: https://github.com/
+  services.yaml: |
+    - Cluster Management:
+        - Argo CD:
+            href: https://ops.synera.com.br/
+            description: GitOps control plane
+            icon: argo-cd.png
+        - Homepage:
+            href: https://ihome.synera.com.br/
+            description: Synera homelab dashboard
+            icon: homepage.png
+  widgets.yaml: |
+    - kubernetes:
+        cluster:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+          label: cluster
+        nodes:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+    - resources:
+        backend: resources
+        expanded: true
+        cpu: true
+        memory: true
+        network: default
+    - search:
+        provider: duckduckgo
+        target: _blank
+  docker.yaml: ""
