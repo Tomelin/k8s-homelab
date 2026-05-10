@@ -27,9 +27,9 @@ gatewayapi:
       # kubectl port-forward -n envoy-gateway-system deployment/envoy-gateway 19000:19000
       admin:
         address:
-          host: "127.0.0.1"
+          host: "0.0.0.0"
           port: 19000
-        enablePprof: false
+        enablePprof: true
       logging:
         level:
           default: info
