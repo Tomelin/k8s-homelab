@@ -68,10 +68,13 @@ config:
       Workflows:
         style: row
         columns: 4
-      Cluster Management:
+      Platforms:
         style: row
         columns: 4
-      Platforms:
+      Infrastructure:
+        style: row
+        columns: 4
+      Monitoring:
         style: row
         columns: 4
 
@@ -121,7 +124,6 @@ config:
             href: https://github.com/
             description: Github Actions
             icon: github.svg
-
     - Infrastructure:
       - PI-Hole:
           href: https://pihole.synera.com.br/
@@ -139,6 +141,10 @@ config:
           href: https://kubernetes.default.svc
           description: Kubernetes cluster
           icon: opencost.png
+      - PG Admin:
+            href: https://kubernetes.default.svc
+            description: Kubernetes cluster
+            icon: postgresql.svg
     - Monitoring:
         - Prometheus:
             href: https://kubernetes.default.svc
@@ -156,10 +162,7 @@ config:
             href: https://kubernetes.default.svc
             description: Kubernetes cluster
             icon: tempo.svg
-        - PG Admin:
-            href: https://kubernetes.default.svc
-            description: Kubernetes cluster
-            icon: postgresql.svg
+
   widgets.yaml: |
     - kubernetes:
         cluster:
