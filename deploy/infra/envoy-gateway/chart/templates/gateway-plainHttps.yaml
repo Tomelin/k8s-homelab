@@ -24,17 +24,19 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-    - name: {{ .Values.gateways.plainHttps.listenerName }}
-      protocol: {{ .Values.gateways.plainHttps.protocol }}
-      port: {{ .Values.gateways.plainHttps.port }}
-      hostname: {{ .Values.listenerHostname | quote }}
+    {{- range .Values.gateways.plainHttps.domains }}
+    - name: {{ .name | replace "." "-" }}
+      protocol: {{ $.Values.gateways.plainHttps.protocol }}
+      port: {{ $.Values.gateways.plainHttps.port }}
+      hostname: {{ .listenerHostname | quote }}
       tls:
         certificateRefs:
           - kind: Secret
-            name: {{ .Values.gateways.plainHttps.secretTLSName }}
-            namespace: {{ .Values.namespace }}
-        mode: {{ .Values.gateways.plainHttps.mode }}
+            name: {{ .secretTLSName }}
+            namespace: {{ $.Values.namespace }}
+        mode: {{ $.Values.gateways.plainHttps.mode }}
       allowedRoutes:
         namespaces:
           from: All
+    {{- end }}
 {{- end }}

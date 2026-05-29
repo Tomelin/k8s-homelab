@@ -63,22 +63,6 @@ gateways:
       metallb.io/address-pool: primary
       external-dns.alpha.kubernetes.io/target: "186.216.247.16"
 
-  plainHttps:
-    enabled: true
-    name: https
-    listenerName: https
-    port: 443
-    envoyProxyName: https-proxy
-    annotations:
-      external-dns.alpha.kubernetes.io/target: "186.216.247.16"
-    protocol: HTTPS
-    secretTLSName: envoy-gateway-tls
-    mode: Terminate
-    # Overridden per-env (see values/envoy-gateway-config/base.yaml.gotmpl).
-    # The ssl-cert annotation carries the ACM ARN for TLS termination at the NLB.
-    serviceAnnotations:
-      metallb.io/address-pool: primary
-      external-dns.alpha.kubernetes.io/target: "186.216.247.16"
   # plainHttps:
   #   enabled: true
   #   name: https
@@ -95,13 +79,32 @@ gateways:
   #   serviceAnnotations:
   #     metallb.io/address-pool: primary
   #     external-dns.alpha.kubernetes.io/target: "186.216.247.16"
-  #   domains:
-  #     - name: "synera"
-  #       listenerHostname: "*.synera.com.br"
-  #       secretTLSName: envoy-gateway-tls
-  #     - name: "kubediscovery"
-  #       listenerHostname: "*.kubediscovery.com"
-  #       secretTLSName: "kubediscovery-tls"
+  plainHttps:
+    enabled: true
+    name: https
+    listenerName: https
+    port: 443
+    envoyProxyName: https-proxy
+    annotations:
+      external-dns.alpha.kubernetes.io/target: "186.216.247.16"
+    protocol: HTTPS
+    secretTLSName: envoy-gateway-tls
+    mode: Terminate
+    # Overridden per-env (see values/envoy-gateway-config/base.yaml.gotmpl).
+    # The ssl-cert annotation carries the ACM ARN for TLS termination at the NLB.
+    serviceAnnotations:
+      metallb.io/address-pool: primary
+      external-dns.alpha.kubernetes.io/target: "186.216.247.16"
+    domains:
+      - name: "https"
+        listenerHostname: "*.synera.com.br"
+        secretTLSName: envoy-gateway-tls
+      - name: "synera"
+        listenerHostname: "*.synera.com.br"
+        secretTLSName: envoy-gateway-tls
+      - name: "kubediscovery"
+        listenerHostname: "*.kubediscovery.com"
+        secretTLSName: "kubediscovery-tls"
   internalHttps:
     enabled: true
     name: internal-https
