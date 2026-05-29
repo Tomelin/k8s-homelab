@@ -86,7 +86,7 @@ gateways:
         secretTLSName: envoy-gateway-tls
       - name: "kubediscovery"
         listenerHostname: "*.kubediscovery.com"
-        secretTLSName: "kubediscovery-tls"
+        secretTLSName: envoy-gateway-tls
   internalHttps:
     enabled: true
     name: internal-https
