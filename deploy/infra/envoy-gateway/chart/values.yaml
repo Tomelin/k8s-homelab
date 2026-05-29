@@ -99,9 +99,6 @@ gateways:
       - name: "https"
         listenerHostname: "*.synera.com.br"
         secretTLSName: envoy-gateway-tls
-      - name: "synera"
-        listenerHostname: "*.synera.com.br"
-        secretTLSName: envoy-gateway-tls
       - name: "kubediscovery"
         listenerHostname: "*.kubediscovery.com"
         secretTLSName: "envoy-gateway-tls"
