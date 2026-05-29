@@ -25,19 +25,20 @@ spec:
           from: All
     {{- range .Values.gateways.plainHttps.domains }}
     - name: {{ .name | replace "." "-" }}
-      protocol: {{ .Values.gateways.plainHttps.protocol }}
-      port: {{ .Values.gateways.plainHttps.port }}
+      protocol: {{ $.Values.gateways.plainHttps.protocol }}
+      port: {{ $.Values.gateways.plainHttps.port }}
       hostname: {{ .listenerHostname | quote }}
       tls:
         certificateRefs:
           - kind: Secret
             name: {{ .secretTLSName }}
-            namespace: {{ .Values.namespace }}
-        mode: {{ .Values.gateways.plainHttps.mode }}
+            namespace: {{ $.Values.namespace }}
+        mode: {{ $.Values.gateways.plainHttps.mode }}
       allowedRoutes:
         namespaces:
           from: All
-  {{- end }}
+    {{- end }}
+{{- end }}
 # ---
 # apiVersion: gateway.networking.k8s.io/v1
 # kind: Gateway
