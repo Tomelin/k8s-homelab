@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tomelin-dev
+  namespace: argocd
+spec:
+  project: provisioning
+  source:
+    repoURL: https://github.com/Tomelin/k8s-homelab
+    targetRevision: HEAD
+    path: deploy/infra/tomelin-dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: tomelin-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
