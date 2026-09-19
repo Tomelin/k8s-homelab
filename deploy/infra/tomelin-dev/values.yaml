@@ -36,7 +36,7 @@ gitSync:
   resources: {}
   # Authentication for private GitHub repositories cloned over HTTPS.
   githubToken:
-    enabled: false
+    enabled: true
     existingSecret: github-token
     usernameKey: username
     tokenKey: token
@@ -48,8 +48,9 @@ gitSync:
 
 hugo:
   # Public URL of the blog, without a trailing slash.
-  baseURL: "https://blog.example.com"
+  baseURL: "https://blog.kubediscovery.com"
   environment: production
+  port: 1313
   # Relative to the repository root, e.g. "/site" for a site/ subdirectory.
   sourcePath: ""
   buildDrafts: false
@@ -59,7 +60,7 @@ hugo:
 imagePullSecrets: []
 # This is to override the chart name.
 nameOverride: ""
-fullnameOverride: ""
+fullnameOverride: "kubediscovery-blog"
 
 # This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
 serviceAccount:
@@ -97,7 +98,7 @@ service:
   # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
   type: ClusterIP
   # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
-  port: 1313
+  port: 80
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
@@ -121,17 +122,19 @@ ingress:
 # (see: https://gateway-api.sigs.k8s.io/guides/)
 httpRoute:
   # HTTPRoute enabled.
-  enabled: false
-  # HTTPRoute annotations.
-  annotations: {}
-  # Which Gateways this Route is attached to.
+  enabled: true
+  # Argo CD tracking follows the existing kubediscovery application pattern.
+  annotations:
+    argocd.argoproj.io/tracking-id: kubediscovery-blog:gateway.networking.k8s.io/HTTPRoute:kubediscovery/kubediscovery-blog
+  # Attach the blog route to the shared Envoy Gateway HTTPS listener.
   parentRefs:
-  - name: gateway
-    sectionName: http
-    # namespace: default
-  # Hostnames matching HTTP header.
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: https
+      namespace: envoy-gateway
+      sectionName: kubediscovery
   hostnames:
-  - chart-example.local
+    - blog.kubediscovery.com
   # List of rules and filters applied.
   rules:
   - matches:

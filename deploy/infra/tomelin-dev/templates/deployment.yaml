@@ -123,7 +123,7 @@ spec:
             - server
             - --source=/git/{{ .Values.gitSync.link }}{{ .Values.hugo.sourcePath }}
             - --bind=0.0.0.0
-            - --port={{ .Values.service.port }}
+            - --port={{ .Values.hugo.port }}
             - --baseURL={{ required "hugo.baseURL is required" .Values.hugo.baseURL }}
             - --appendPort=false
             - --environment={{ .Values.hugo.environment }}
@@ -135,7 +135,7 @@ spec:
             {{- end }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.hugo.port }}
               protocol: TCP
           {{- with .Values.livenessProbe }}
           livenessProbe:
