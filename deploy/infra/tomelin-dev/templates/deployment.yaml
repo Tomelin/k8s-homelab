@@ -1,0 +1,182 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "blog.fullname" . }}
+  labels:
+    {{- include "blog.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "blog.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "blog.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "blog.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+        - name: wait-for-initial-checkout
+          image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
+          imagePullPolicy: {{ .Values.gitSync.image.pullPolicy }}
+          {{- if .Values.gitSync.githubToken.enabled }}
+          env:
+            - name: GITSYNC_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "gitSync.githubToken.existingSecret is required when token authentication is enabled" .Values.gitSync.githubToken.existingSecret }}
+                  key: {{ .Values.gitSync.githubToken.usernameKey }}
+            - name: GITSYNC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.gitSync.githubToken.existingSecret }}
+                  key: {{ .Values.gitSync.githubToken.tokenKey }}
+          {{- end }}
+          args:
+            - --repo={{ required "gitSync.repo is required" .Values.gitSync.repo }}
+            - --ref={{ .Values.gitSync.ref }}
+            - --root=/git
+            - --link={{ .Values.gitSync.link }}
+            - --depth={{ .Values.gitSync.depth }}
+            - --one-time
+            {{- if .Values.gitSync.ssh.enabled }}
+            - --ssh-key-file=/etc/git-secret/{{ .Values.gitSync.ssh.privateKeyKey }}
+            - --ssh-known-hosts=true
+            - --ssh-known-hosts-file=/etc/git-secret/{{ .Values.gitSync.ssh.knownHostsKey }}
+            {{- end }}
+          volumeMounts:
+            - name: git-checkout
+              mountPath: /git
+            {{- if .Values.gitSync.ssh.enabled }}
+            - name: git-secret
+              mountPath: /etc/git-secret
+              readOnly: true
+            {{- end }}
+      containers:
+        - name: git-sync
+          image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
+          imagePullPolicy: {{ .Values.gitSync.image.pullPolicy }}
+          {{- if .Values.gitSync.githubToken.enabled }}
+          env:
+            - name: GITSYNC_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "gitSync.githubToken.existingSecret is required when token authentication is enabled" .Values.gitSync.githubToken.existingSecret }}
+                  key: {{ .Values.gitSync.githubToken.usernameKey }}
+            - name: GITSYNC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.gitSync.githubToken.existingSecret }}
+                  key: {{ .Values.gitSync.githubToken.tokenKey }}
+          {{- end }}
+          args:
+            - --repo={{ required "gitSync.repo is required" .Values.gitSync.repo }}
+            - --ref={{ .Values.gitSync.ref }}
+            - --root=/git
+            - --link={{ .Values.gitSync.link }}
+            - --depth={{ .Values.gitSync.depth }}
+            - --period={{ .Values.gitSync.period }}
+            {{- if .Values.gitSync.ssh.enabled }}
+            - --ssh-key-file=/etc/git-secret/{{ .Values.gitSync.ssh.privateKeyKey }}
+            - --ssh-known-hosts=true
+            - --ssh-known-hosts-file=/etc/git-secret/{{ .Values.gitSync.ssh.knownHostsKey }}
+            {{- end }}
+          securityContext:
+            {{- toYaml .Values.gitSync.securityContext | nindent 12 }}
+          volumeMounts:
+            - name: git-checkout
+              mountPath: /git
+            {{- if .Values.gitSync.ssh.enabled }}
+            - name: git-secret
+              mountPath: /etc/git-secret
+              readOnly: true
+            {{- end }}
+          {{- with .Values.gitSync.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        - name: hugo
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - server
+            - --source=/git/{{ .Values.gitSync.link }}{{ .Values.hugo.sourcePath }}
+            - --bind=0.0.0.0
+            - --port={{ .Values.service.port }}
+            - --baseURL={{ required "hugo.baseURL is required" .Values.hugo.baseURL }}
+            - --appendPort=false
+            - --environment={{ .Values.hugo.environment }}
+            {{- if .Values.hugo.buildDrafts }}
+            - --buildDrafts
+            {{- end }}
+            {{- with .Values.hugo.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: git-checkout
+              mountPath: /git
+              readOnly: true
+            {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      volumes:
+        - name: git-checkout
+          emptyDir: {}
+        {{- if .Values.gitSync.ssh.enabled }}
+        - name: git-secret
+          secret:
+            secretName: {{ required "gitSync.ssh.existingSecret is required when SSH is enabled" .Values.gitSync.ssh.existingSecret }}
+            defaultMode: 0440
+        {{- end }}
+        {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
