@@ -127,6 +127,8 @@ spec:
             - --baseURL={{ required "hugo.baseURL is required" .Values.hugo.baseURL }}
             - --appendPort=false
             - --noBuildLock
+            - --renderToMemory
+            - --cacheDir=/tmp/hugo_cache
             - --environment={{ .Values.hugo.environment }}
             {{- if .Values.hugo.buildDrafts }}
             - --buildDrafts
