@@ -102,6 +102,9 @@ gateways:
       - name: "kubediscovery"
         listenerHostname: "*.kubediscovery.com"
         secretTLSName: "envoy-gateway-tls"
+      - name: "tomelin-dev"
+        listenerHostname: "*.tomelin.dev"
+        secretTLSName: "envoy-gateway-tls"
   internalHttps:
     enabled: true
     name: internal-https
