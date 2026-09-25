@@ -1,0 +1,9 @@
+go 1.23.0
+
+use (
+	// Planned modules (to be created in upcoming tasks):
+	// ./services/discovery
+	// ./services/inventory
+	// ./services/reconciler
+	// ./pkg/sdk
+)
