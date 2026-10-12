@@ -107,6 +107,11 @@ config:
           href: https://synera.com.br/
           description: Integration Automation with AI Platform
           icon: flowise.png
+      - Home Assistant:
+          href: https://kubernetes.default.svc
+          description: Home Assistant
+          icon: tempo.svg
+
     - Workflows:
         - Argo CD:
             href: https://ops.synera.com.br/

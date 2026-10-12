@@ -1,0 +1,34 @@
+{{- if .Values.httproute.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ .Values.httproute.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "home-assistant.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+    external-dns.alpha.kubernetes.io/target: {{ .Values.httproute.externalDNSTarget | quote }}
+    gethomepage.dev/description: Home automation
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Infrastructure
+    gethomepage.dev/icon: home-assistant.png
+    gethomepage.dev/name: Home Assistant
+spec:
+  hostnames:
+    - {{ .Values.httproute.hostname | quote }}
+  parentRefs:
+    {{- toYaml .Values.httproute.parentRefs | nindent 4 }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - group: ""
+          kind: Service
+          name: {{ include "home-assistant.fullname" . }}
+          namespace: {{ .Release.Namespace }}
+          port: {{ .Values.service.port }}
+          weight: 1
+{{- end }}
