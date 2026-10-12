@@ -3,12 +3,17 @@ kind: Application
 metadata:
   name: home-assistant
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
 spec:
   project: provisioning
   source:
     repoURL: https://github.com/Tomelin/k8s-homelab
-    targetRevision: HEAD
+    targetRevision: main
     path: deploy/infra/home-assistant
+    helm:
+      valueFiles:
+        - values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: home-assistant
@@ -16,3 +21,11 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        maxDuration: 10m0s
+        factor: 2
