@@ -74,6 +74,9 @@ httproute:
       namespace: envoy-gateway
       sectionName: internal-https
 
+ingress:
+  enabled: false
+
 # Equivalent to Docker's --network=host. ClusterFirstWithHostNet keeps
 # Kubernetes service discovery available to the pod.
 hostNetwork: true
@@ -82,6 +85,16 @@ dnsPolicy: ClusterFirstWithHostNet
 env:
   - name: TZ
     value: America/Sao_Paulo
+
+config:
+  enabled: true
+  configuration: |-
+    default_config:
+
+    http:
+      use_x_forwarded_for: true
+      trusted_proxies:
+        - 10.233.64.0/18
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
