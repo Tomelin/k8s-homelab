@@ -120,7 +120,7 @@ httpRoute:
   nameOverride: ""
   annotations: {}
   hostnames:
-    - extendmemoty.synera.com.br
+    - extendmemory.synera.com.br
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
