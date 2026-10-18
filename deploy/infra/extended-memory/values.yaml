@@ -7,7 +7,7 @@ replicaCount: 2
 image:
   repository: registry.synera.com.br/synera/memory-api
   pullPolicy: IfNotPresent
-  tag: "dev"
+  tag: "latest"
 
 imagePullSecrets: []
 
