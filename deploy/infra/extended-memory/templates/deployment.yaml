@@ -81,6 +81,11 @@ spec:
                 secretKeyRef:
                   name: {{ include "extended-memory.secretName" . }}
                   key: OTEL_EXPORTER_OTLP_ENDPOINT
+            - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "extended-memory.secretName" . }}
+                  key: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
             - name: OTEL_EXPORTER_OTLP_HEADERS
               valueFrom:
                 secretKeyRef:
