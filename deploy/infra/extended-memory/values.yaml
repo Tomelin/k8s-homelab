@@ -5,9 +5,9 @@ fullnameOverride: memory-api
 replicaCount: 2
 
 image:
-  repository: ghcr.io/tomelin/extend-memory-ai
+  repository: registry.synera.com.br/synera/memory-api 
   pullPolicy: IfNotPresent
-  tag: ""
+  tag: "dev"
 
 imagePullSecrets: []
 
